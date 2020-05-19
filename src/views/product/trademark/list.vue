@@ -25,8 +25,8 @@
       <!-- 如果列表列的内容是指定指定的结构: 使用作用域插槽 -->
       <el-table-column prop="address" label="操作">
         <template slot-scope="{row, $index}">
-          <el-button type="warning" icon="el-icon-edit" size="mini">修改</el-button>
-          <el-button type="danger" icon="el-icon-delete" size="mini">删除</el-button>
+          <el-button type="warning" icon="el-icon-edit" size="mini" @click="showUpdate(row)">修改</el-button>
+          <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteTrademark(row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -43,7 +43,7 @@
       @size-change="handleSizeChange"
     >
     </el-pagination>
-    <el-dialog title="添加" :visible.sync="isShowDialog">  <!-- 内部会执行: $emit('update:visible', false) 自动关闭 -->
+    <el-dialog :title="form.id ? '更新' : '添加'" :visible.sync="isShowDialog">  <!-- 内部会执行: $emit('update:visible', false) 自动关闭 -->
       <el-form :model="form" style="width: 80%">
         <el-form-item label="品牌名称" :label-width="formLabelWidth">
           <el-input v-model="form.tmName" autocomplete="off" placeholder="请输入品牌名称"></el-input>
@@ -70,7 +70,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="isShowDialog = false">取 消</el-button>
-        <el-button type="primary" @click="addTrademark">确 定</el-button>
+        <el-button type="primary" @click="addOrUpdateTrademark">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -187,28 +187,78 @@
       },
 
       /* 
-      添加品牌
+      显示修改界面
       */
-      async addTrademark () {
+      showUpdate (trademark) {
+        // 将当前品牌对象保存到form ==> 用于在dialog中显示
+        this.form = trademark
+        // 显示
+        this.isShowDialog = true
+      },
+
+      /* 
+      添加或者更新品牌
+      */
+      async addOrUpdateTrademark () {
         // 取出请求需要数据
         const trademark = this.form
-        // 发送添加的异步ajax请求
-        const result = await this.$API.trademark.add(trademark)
-        // 成功后, 提示添加成功, 隐藏当前Dialog, 重新显示新的品牌列表
+        let result
+        // 如果trademark中有id, 就发更新的请求, 否则发添加的请求
+        if (trademark.id) {
+          result = await this.$API.trademark.update(trademark)
+        } else {
+          result = await this.$API.trademark.add(trademark)
+        }
+        
+        // 成功后, 提示添加/更新成功, 隐藏当前Dialog, 重新显示新的品牌列表
         if (result.code===200) {
-          this.$message.success('添加品牌成功')
+          this.$message.success(`${trademark.id ? '更新' : '添加'}品牌成功`)
           this.isShowDialog = false
-          this.getTrademarks()
+          // 如果是更新,获取当前页显示
+          // 如果是添加, 获取第1页显示
+          this.getTrademarks(trademark.id ? this.page : 1)
           // 清除数据
           this.form = {
             tmName: '',
             logoUrl: ''
           }
         } else {
-          // 失败后, 提示添加失败
-          this.$message.error('添加品牌失败')
+          // 失败后, 提示添加/更新失败
+          this.$message.error(`${trademark.id ? '更新' : '添加'}品牌失败`)
         }
-        
+      },
+
+      /* 
+      删除指定的品牌
+      */
+      deleteTrademark (trademark) {
+        this.$confirm(`确定删除 ${trademark.tmName} 吗?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async () => { // 点击确定
+          // 发送删除品牌的请求
+          const result = await this.$API.trademark.remove(trademark.id)
+          // 如果成功了
+          if (result.code===200) {
+            this.$message.success('删除品牌成功!')
+            // 重新获取分页列表显示
+            // 方式一: 固定去第1页面
+            // this.getTrademarks(1) 
+            // 方式二: 还显示当前页(有可能当前页已经不存在了)
+              // 特别: 如果当前页只剩一条数据, 获取上一页显示, 否则获取当前页
+            const page = this.trademarks.length===1 ? this.page-1 : this.page
+            this.getTrademarks(page)
+
+          } else { // 如果失败了
+            this.$message.error('删除品牌失败!')
+          }
+        }).catch(() => { // 点击取消
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
       }
     }
   }
