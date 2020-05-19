@@ -42,7 +42,6 @@
       @size-change="handleSizeChange"
       >
     </el-pagination>
-
     <el-dialog title="添加" :visible.sync="isShowDialog">  <!-- 内部会执行: $emit('update:visible', false) 自动关闭 -->
       <el-form :model="form" style="width: 80%">
         <el-form-item label="品牌名称" :label-width="formLabelWidth">
