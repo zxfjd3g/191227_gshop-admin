@@ -1,8 +1,9 @@
 <template>
   <div>
-    <el-button type="primary" icon="el-icon-plus" @click="showAdd">添加</el-button>
+    <el-button type="primary" icon="el-icon-plus" @click="showAdd" style="margin-bottom:20px">添加</el-button>
 
     <el-table 
+      v-loading="loading"
       :data="trademarks"
       border
       stripe>
@@ -24,8 +25,8 @@
       <!-- 如果列表列的内容是指定指定的结构: 使用作用域插槽 -->
       <el-table-column prop="address" label="操作">
         <template slot-scope="{row, $index}">
-          <el-button type="warning" icon="el-icon-edit">修改</el-button>
-          <el-button type="danger" icon="el-icon-delete">删除</el-button>
+          <el-button type="warning" icon="el-icon-edit" size="mini">修改</el-button>
+          <el-button type="danger" icon="el-icon-delete" size="mini">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -40,7 +41,7 @@
       :total="total"
       @current-change="getTrademarks"
       @size-change="handleSizeChange"
-      >
+    >
     </el-pagination>
     <el-dialog title="添加" :visible.sync="isShowDialog">  <!-- 内部会执行: $emit('update:visible', false) 自动关闭 -->
       <el-form :model="form" style="width: 80%">
@@ -48,20 +49,28 @@
           <el-input v-model="form.tmName" autocomplete="off" placeholder="请输入品牌名称"></el-input>
         </el-form-item>
         <el-form-item label="品牌LOGO" :label-width="formLabelWidth">
+          <!-- 
+            action: 指定上传图片的接口地址   组件内部向发此地址发送上传文件的ajax请求
+              http://182.92.128.115/admin/product/fileUpload: 不可以, 跨域了
+              /dev-api/admin/product/fileUpload: 可以, 通过代理服务转发, 就没跨域了
+            on-success: 指定上传成功时调用的回调函数
+            before-upload: 指定在准备发送上传图片请求前的回调函数, 如果返回值为false, 不会发出请求
+          -->
           <el-upload
             class="avatar-uploader"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="/dev-api/admin/product/fileUpload"
             :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            :on-success="handleLogoSuccess"
+            :before-upload="beforeLogoUpload">
+            <img v-if="form.logoUrl" :src="form.logoUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
           </el-upload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="isShowDialog = false">取 消</el-button>
-        <el-button type="primary" @click="isShowDialog = false">确 定</el-button>
+        <el-button type="primary" @click="addTrademark">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -73,6 +82,7 @@
 
     data() {
       return {
+        loading: false, //不显示loading
         trademarks: [], // 当前页的列表数据
         total: 0, // 总数量
         page: 1, // 当前页码
@@ -84,8 +94,6 @@
           logoUrl: ''
         },
         formLabelWidth: '100px',
-
-        imageUrl: '',
       }
     },
 
@@ -98,20 +106,36 @@
 
     methods: {
 
-       handleAvatarSuccess(res, file) {
-        this.imageUrl = URL.createObjectURL(file.raw);
+      /* 
+      当上传图片成功时调用
+      */
+      handleLogoSuccess(res, file) {
+        // console.log('---', res, file)
+        // 得到返回的图片url
+        // const logoUrl = file.response.data
+        const logoUrl = res.data
+        // 保存图片url
+        this.form.logoUrl = logoUrl
       },
-      beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/jpeg';
-        const isLt2M = file.size / 1024 / 1024 < 2;
 
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!');
+      /* 
+      指定在准备发送上传图片请求前的回调函数, 如果返回值为false, 不会发出请求
+      作用: 限制上传图片的类型与大小
+      要求: 只能上传jpg/png文件，且不超过500kb
+      */
+      beforeLogoUpload(file) {
+        
+        const isJPGOrPNG = ['image/jpeg', 'image/png'].indexOf(file.type)>=0
+        const isLt500KB = file.size / 1024 < 500
+
+        if (!isJPGOrPNG) {
+          this.$message.error('上传头像图片只能是 JPG/PNG 格式!')
         }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
+        if (!isLt500KB) {
+          this.$message.error('上传头像图片大小不能超过 500kb!')
         }
-        return isJPG && isLt2M;
+       
+        return isJPGOrPNG && isLt500KB;
       },
 
       /* 
@@ -120,8 +144,15 @@
       async getTrademarks (page=1) {
         this.page = page
 
+        // 在发请求获取数据前, 显示loading
+        this.loading = true
+
         // 发异步ajax获取数据
         const result = await this.$API.trademark.getList(page, this.limit)
+
+        // 请求结束后, 隐藏loading
+        this.loading = false
+
         // 成功了, 更新列表数据
         if (result.code===200) {
           const {records, total} = result.data
@@ -146,7 +177,38 @@
       显示添加界面
       */
       showAdd () {
+        // 重置form数据(可能原本有)
+        this.form = {
+          tmName: '',
+          logoUrl: ''
+        }
+        // 显示
         this.isShowDialog = true
+      },
+
+      /* 
+      添加品牌
+      */
+      async addTrademark () {
+        // 取出请求需要数据
+        const trademark = this.form
+        // 发送添加的异步ajax请求
+        const result = await this.$API.trademark.add(trademark)
+        // 成功后, 提示添加成功, 隐藏当前Dialog, 重新显示新的品牌列表
+        if (result.code===200) {
+          this.$message.success('添加品牌成功')
+          this.isShowDialog = false
+          this.getTrademarks()
+          // 清除数据
+          this.form = {
+            tmName: '',
+            logoUrl: ''
+          }
+        } else {
+          // 失败后, 提示添加失败
+          this.$message.error('添加品牌失败')
+        }
+        
       }
     }
   }
