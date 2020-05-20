@@ -11,7 +11,7 @@
       </el-select>
     </el-form-item>
     <el-form-item label="三级分类">
-      <el-select v-model="cForm.category3Id" placeholder="选择三级分类">
+      <el-select v-model="cForm.category3Id" placeholder="选择三级分类" @change="handleChange3">
         <el-option :label="c.name" :value="c.id" v-for="c in category3List" :key="c.id"></el-option>
       </el-select>
     </el-form-item>
@@ -59,6 +59,9 @@ export default {
       this.category2List = []
       this.category3List = []
 
+      // 分发事件, 通知父组件
+      this.$emit('categoryChange', {categoryId: category1Id, level: 1})
+
       // 获取二级列表
       const result = await this.$API.category.getCategorys2(category1Id)
       this.category2List = result.data
@@ -72,10 +75,21 @@ export default {
       this.cForm.category3Id = ''
       this.category3List = []
 
+      // 分发事件, 通知父组件
+      this.$emit('categoryChange', {categoryId: category2Id, level: 2})
+
       // 异步获取三级列表数据
       const result = await this.$API.category.getCategorys3(category2Id)
       this.category3List = result.data
     },
+
+    /* 
+    处理选中三级分类项的监听回调
+    */
+    handleChange3 (category3Id) {
+      // 分发事件, 通知父组件
+      this.$emit('categoryChange', {categoryId: category3Id, level: 3})
+    }
   }
 }
 </script>
