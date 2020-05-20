@@ -12,8 +12,8 @@
     },
 
     mounted () {
-      console.log('mounted()', this.$attrs)
-      console.log('mounted()', this.$listeners)
+      // console.log('mounted()', this.$attrs)
+      // console.log('mounted()', this.$listeners)
     }
   }
 </script>
