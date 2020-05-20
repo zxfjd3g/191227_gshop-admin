@@ -1,105 +1,85 @@
 <template>
-  <!--查询表单-->
-  <el-form :inline="true" class="demo-form-inline">
-
-    <!-- 一级分类 -->
+  <el-form :inline="true" :model="cForm" class="demo-form-inline">
     <el-form-item label="一级分类">
-      <el-select
-        v-model="category1Id"
-        placeholder="请选择"
-        @change="category1Changed">
-        <el-option
-          v-for="category in categoryList1"
-          :key="category.id"
-          :label="category.name"
-          :value="category.id"/>
+      <el-select v-model="cForm.category1Id" placeholder="选择一级分类" @change="handleChange1">
+        <el-option :label="c.name" :value="c.id" v-for="c in category1List" :key="c.id"></el-option>
       </el-select>
     </el-form-item>
-
-    <!-- 二级分类 -->
     <el-form-item label="二级分类">
-      <el-select
-        v-model="category2Id"
-        placeholder="请选择"
-        @change="category2Changed">
-        <el-option
-          v-for="category in categoryList2"
-          :key="category.id"
-          :label="category.name"
-          :value="category.id"/>
+      <el-select v-model="cForm.category2Id" placeholder="选择二级分类" @change="handleChange2">
+        <el-option :label="c.name" :value="c.id" v-for="c in category2List" :key="c.id"></el-option>
       </el-select>
     </el-form-item>
-
-    <!-- 三级分类 -->
     <el-form-item label="三级分类">
-      <el-select
-        v-model="category3Id"
-        placeholder="请选择"
-        @change="category3Changed">
-        <el-option
-          v-for="category in categoryList3"
-          :key="category.id"
-          :label="category.name"
-          :value="category.id"/>
+      <el-select v-model="cForm.category3Id" placeholder="选择三级分类">
+        <el-option :label="c.name" :value="c.id" v-for="c in category3List" :key="c.id"></el-option>
       </el-select>
     </el-form-item>
-
   </el-form>
-
 </template>
 
 <script>
 export default {
+  name: 'CategorySelector',
 
-  data() {
+  data () {
     return {
-      // 查询表单数据
-      category1Id: null,
-      category2Id: null,
-      category3Id: null,
-      categoryList1: [],
-      categoryList2: [],
-      categoryList3: []
+      cForm: {
+        category1Id: '',
+        category2Id: '',
+        category3Id: '',
+      },
+      category1List: [], // 一级分类列表
+      category2List: [], // 二级分类列表
+      category3List: [], // 三级分类列表
     }
   },
 
-  // 初始化一级类别
-  created() {
-    this.$API.category.getCategorys1().then(result => {
-      this.categoryList1 = result.data
-    })
+  mounted () {
+    this.getCategory1List()
   },
 
   methods: {
-    // 切换1级类别
-    category1Changed() {
-      this.categoryList2 = []
-      this.categoryList3 = []
-      this.category2Id = null
-      this.category3Id = null
-      this.$API.category.getCategorys2(this.category1Id).then(result => {
-        this.categoryList2 = result.data
-        this.$emit('listenOnSelect', this.category1Id, 1)
-      })
+    /* 
+    获取一级分类列表显示
+    */
+    async getCategory1List () {
+      const result = await this.$API.category.getCategorys1()
+      // console.log('result', result)
+      this.category1List = result.data
     },
 
-    // 切换2级类别
-    category2Changed() {
-      this.categoryList3 = []
-      this.category3Id = null
-      this.$API.category.getCategorys3(this.category2Id).then(result => {
-        this.categoryList3 = result.data
-        this.$emit('listenOnSelect', this.category2Id, 2)
-      })
+    /* 
+    处理选中一级分类项的监听回调 ==> 获取二级分类列表显示
+    */
+    async handleChange1 (category1Id) {
+      // 重置二级与三级分类相关数据
+      this.cForm.category2Id = ''
+      this.cForm.category3Id = ''
+      this.category2List = []
+      this.category3List = []
+
+      // 获取二级列表
+      const result = await this.$API.category.getCategorys2(category1Id)
+      this.category2List = result.data
     },
 
-    // 显示属性列表
-    category3Changed() {
-      // 子组件向父组件传值
-      this.$emit('listenOnSelect', this.category3Id, 3)
-    }
+    /* 
+    处理选中二级分类项的监听回调 ==> 获取三级分类列表显示
+    */
+    async handleChange2 (category2Id) {
+      // 重置三级列表相关数据
+      this.cForm.category3Id = ''
+      this.category3List = []
+
+      // 异步获取三级列表数据
+      const result = await this.$API.category.getCategorys3(category2Id)
+      this.category3List = result.data
+    },
   }
-
 }
 </script>
 
+<style>
+
+</style>

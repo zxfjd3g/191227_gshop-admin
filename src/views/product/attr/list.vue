@@ -1,12 +1,18 @@
 <template>
   <div>
-    平台属性管理
+    <el-card>
+      <CategorySelector/>
+    </el-card>
   </div>
 </template>
 
 <script>
 export default {
   name: 'AttrList',
+
+  mounted () {
+    this.$API.attr.getList(2, 13, 61)
+  }
 }
 </script>
 
