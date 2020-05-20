@@ -7,7 +7,7 @@
     <el-card>
       <div v-show="isShowList">
         <el-button type="primary" icon="el-icon-plus" style="margin-bottom: 20px" 
-          @click="isShowList=false" :disabled="!category3Id">添加属性</el-button>
+          @click="showAdd" :disabled="!category3Id">添加属性</el-button>
 
         <el-table border :data="attrs">
           <el-table-column label="序号" type="index" width="80" align="center"></el-table-column>
@@ -19,7 +19,7 @@
           </el-table-column>
           <el-table-column label="操作" width="150">
             <template slot-scope="{row, $index}">
-              <HintButton title="修改" type="primary" icon="el-icon-edit" size="mini"></HintButton>
+              <HintButton title="修改" type="primary" icon="el-icon-edit" size="mini" @click="showUpdate(row)"></HintButton>
               <hint-button title="删除" type="danger" icon="el-icon-delete" size="mini"></hint-button>
             </template>
           </el-table-column>
@@ -47,16 +47,19 @@
           <el-table-column label="序号"  type="index" width="80" align="center"></el-table-column>
           <el-table-column label="属性值名称">
             <template slot-scope="{row, $index}">
-              <el-input v-model="row.valueName" size="mini" placeholder="请输入属性值名称"></el-input>
+              <el-input v-if="row.edit" v-model="row.valueName" size="mini" 
+                placeholder="请输入属性值名称" @blur="toShow(row)" 
+                @keyup.enter.native="toShow(row)"></el-input>
+              <span v-else @click="toEdit(row)">{{row.valueName}}</span>
             </template>
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="{row, $index}">
-              <HintButton title="删除" type="danger" icon="el-icon-delete" size="mini"></HintButton>
+              <HintButton title="删除" type="danger" icon="el-icon-delete" size="mini" 
+              @click="attr.attrValueList.splice($index, 1)"></HintButton>
             </template>
           </el-table-column>
         </el-table>
-
         <el-button type="primary">保存</el-button>
         <el-button @click="isShowList = true">取消</el-button>
       </div>
@@ -75,9 +78,9 @@ export default {
       category3Id: '',  // 三级分类ID
       attrs: [], // 所有属性的列表
 
-      isShowList: false, // 是否显示属性列表页面   true: 列表页面, false: 添加或更新页面  
+      isShowList: true, // 是否显示属性列表页面   true: 列表页面, false: 添加或更新页面  
 
-      attr: { // 要添加的平台属性对象
+      attr: { // 要添加或者修改的平台属性对象
         attrName: '', // 属性名
         attrValueList: [], //属性值的列表
         categoryId: '', // 3级的分类ID
@@ -94,12 +97,77 @@ export default {
   },
 
   methods: {
+
+    /* 
+    将指定属性值对象的界面变为编辑模式
+    */
+    toEdit (value) {
+      // 如果value就已经有edit属性了, 直接指为true
+      if (value.hasOwnProperty('edit')) {
+        value.edit = true
+      } else {
+        // 如果没有, 必须通过$set()来添加一个新属性
+        this.$set(value, 'edit', true)
+      }
+    },
+
+    /* 
+    将指定属性值对象的界面变为查看模式
+    */
+    toShow (value) {
+      // 必须输入了属性值名称
+      if (value.valueName) {
+        // 必须不在已有属性值列表中
+          // 只能与数组当前元素之外所有进行比较
+        const isRepeat = this.attr.attrValueList.some((item, index) => {
+          if (item!==value) {
+            return item.valueName===value.valueName
+          }
+        })
+        console.log('---', value.valueName, isRepeat)
+        if (!isRepeat) {
+          value.edit = false
+        } else { // 如果已经有了
+          value.valueName = ''  // 清除输入
+          this.$message.warning('输入的名称已存在')
+        }
+      }
+    },
+
+    /* 
+    显示添加属性的界面
+    */
+    showAdd () {
+      // 重置attr对象 
+      this.attr = { 
+        attrName: '', 
+        attrValueList: [],
+        categoryId: this.category3Id, 
+        categoryLevel: 3, 
+      }
+      // 显示添加的界面
+      this.isShowList = false
+    },
+
+    /* 
+    显示修改属性的界面
+    
+    */
+    showUpdate (attr) {
+      // 保存要修改的属性对象
+      this.attr = attr
+      // 显示更新的界面(attr中有数据)
+      this.isShowList = false
+    },
+
     /* 
     添加一个新的属性值
     */
     addAttrValue () {
       this.attr.attrValueList.push({
-        valueName: ''
+        attrId: this.attr.id, // 如果是修改属性有值, 如果是添加属性就是undefined
+        valueName: '',
+        edit: true, // 添加的新属性值是编辑模式的
       })
     },
 
