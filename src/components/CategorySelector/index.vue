@@ -92,6 +92,16 @@ export default {
     }
   }
 }
+
+const obj = {
+  a1: 1,
+  a2: {
+    b1: 'abc',
+    b2: [1, 2]
+  },
+}
+const arr = [1]
+
 </script>
 
 <style>

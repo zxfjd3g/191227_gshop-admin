@@ -50,7 +50,7 @@
               <el-input v-if="row.edit" v-model="row.valueName" size="mini" 
                 placeholder="请输入属性值名称" @blur="toShow(row)" 
                 @keyup.enter.native="toShow(row)"></el-input>
-              <span v-else @click="toEdit(row)">{{row.valueName}}</span>
+              <span v-else @click="toEdit(row)" style="display: inline-block; width: 100%">{{row.valueName}}</span>
             </template>
           </el-table-column>
           <el-table-column label="操作">
@@ -68,6 +68,7 @@
 </template>
 
 <script>
+import cloneDeep from 'lodash/cloneDeep' // 只引入要使用的工具函数
 export default {
   name: 'AttrList',
 
@@ -124,7 +125,7 @@ export default {
             return item.valueName===value.valueName
           }
         })
-        console.log('---', value.valueName, isRepeat)
+        // console.log('---', value.valueName, isRepeat)
         if (!isRepeat) {
           value.edit = false
         } else { // 如果已经有了
@@ -155,7 +156,10 @@ export default {
     */
     showUpdate (attr) {
       // 保存要修改的属性对象
-      this.attr = attr
+      // this.attr = attr // 列表与修改界面引用了同一个属性对象  ==> 修改属性名不能取消
+      // this.attr = {...attr} // 对attr进行了一个浅拷贝(克隆)  ==> 修改属性值名称不能取消
+      this.attr = cloneDeep(attr) // 对attr进行了一个深拷贝(克隆) ==> OK
+
       // 显示更新的界面(attr中有数据)
       this.isShowList = false
     },
