@@ -45,7 +45,7 @@
         />
       </div>
       <!-- @update:visible="isShowSpuForm=$event" -->
-      <SpuForm visible.sync="isShowSpuForm"></SpuForm>
+      <SpuForm :visible.sync="isShowSpuForm"></SpuForm>
 
       <SkuForm v-show="isShowSkuForm"></SkuForm>
 
