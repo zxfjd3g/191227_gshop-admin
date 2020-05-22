@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-card>
-      <CategorySelector @categoryChange="handleCategoryChange"/>
+      <CategorySelector ref="cs" @categoryChange="handleCategoryChange"/>
     </el-card>
 
     <el-card>
@@ -20,7 +20,12 @@
           <el-table-column label="操作" width="150">
             <template slot-scope="{row, $index}">
               <HintButton title="修改" type="primary" icon="el-icon-edit" size="mini" @click="showUpdate(row)"></HintButton>
-              <hint-button title="删除" type="danger" icon="el-icon-delete" size="mini"></hint-button>
+              <el-popconfirm
+                :title="`确定删除 '${row.attrName}' 吗`"
+                @onConfirm="deleteAttr(row.id)">
+                <hint-button slot="reference" title="删除" type="danger" icon="el-icon-delete" 
+                  size="mini" />
+              </el-popconfirm>
             </template>
           </el-table-column>
         </el-table>
@@ -74,6 +79,7 @@
 </template>
 
 <script>
+
 import cloneDeep from 'lodash/cloneDeep' // 只引入要使用的工具函数
 export default {
   name: 'AttrList',
@@ -97,14 +103,34 @@ export default {
   },
 
   mounted () {
-    this.category1Id = 2
-    this.category2Id = 13
-    this.category3Id = 61
-    this.getAttrs()
+    // this.category1Id = 2
+    // this.category2Id = 13
+    // this.category3Id = 61
+    // this.getAttrs()
+  },
+
+  watch: {
+    // 当isShowList发生改变时执行处理: 更新cs组件的disabled状态数据
+    isShowList (value) {
+      this.$refs.cs.disabled = !value
+    }
   },
 
   methods: {
-    
+
+    /* 
+    删除指定的属性
+    */
+    deleteAttr (id) {
+      // 请求删除
+      this.$API.attr.remove(id).then(result => {
+        // 重新获取列表显示
+        this.getAttrs()
+      }).catch(error => {
+        this.$message.error('删除属性失败')
+      })
+    },
+
     /* 
     保存(添加/更新)属性
     */
