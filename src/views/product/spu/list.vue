@@ -45,7 +45,11 @@
         />
       </div>
       <!-- @update:visible="isShowSpuForm=$event" -->
-      <SpuForm :visible.sync="isShowSpuForm"></SpuForm>
+      <!-- 
+        一旦使用.sync, 必须是一个动态的变量属性值, 且属性名必须使用:
+        但如果不加:, 传递给子组件的总是false值
+       -->
+      <SpuForm ref="spuForm" :visible.sync="isShowSpuForm"></SpuForm>
 
       <SkuForm v-show="isShowSkuForm"></SkuForm>
 
@@ -71,7 +75,7 @@ export default {
       limit: 3,
       total: 0,
 
-      isShowSpuForm: true, // 是否显示spuForm界面
+      isShowSpuForm: false, // 是否显示spuForm界面
       isShowSkuForm: false, // 是否显示skuForm界面
     }
   },
@@ -105,6 +109,10 @@ export default {
     showUpdateSpu (id) {
       // 显示SpuForm修改界面
       this.isShowSpuForm = true
+
+      // 通知SpuForm根据传入的ID请求获取初始显示需要的数据
+        // 使用的是v-show来隐藏的, 隐藏时组件对象还在存在
+      this.$refs.spuForm.initLoadUpdateData(id)
     },
     /* 
     选择新的分类的监听回调

@@ -74,11 +74,67 @@ export default {
   data () {
     return {
       dialogImageUrl: '',
-      dialogVisible: false  
+      dialogVisible: false,
+
+      spuId: '', // 当前要更新的spuInfo的id
+      spuInfo: {}, // 当前SpuInfo对象
+      spuImageList: [], // Spu的图片列表
+      trademarkList: [], //品牌列表
+      saleAttrList: [], //销售属性列表
     }
   },
 
   methods: {
+    /* 
+    由父组件调用的方法
+    根据id请求加载相关数据
+    */
+    initLoadUpdateData (spuId) {
+      // 保存spuId
+      this.spuId = spuId
+
+      // 1. 根据SPU的id获取SPU的详情信息
+      this.getSpuInfo()
+      // 2. 根据SPU的id获取SPU的图片列表
+      this.getSpuImageList()
+      // 3. 获取所有品牌的列表
+      this.getTrademarkList()
+      // 4. 获取所有销售属性(id/name)列表
+      this.getSaleAttrList()
+    },
+
+    /* 
+    根据SPU的id获取SPU的详情信息
+    */
+    async getSpuInfo () {
+      const result = await this.$API.spu.get(this.spuId)
+      this.spuInfo = result.data
+    }, 
+
+    /* 
+    根据SPU的id获取SPU的图片列表
+    */
+    async getSpuImageList () {
+      const result = await this.$API.sku.getSpuImageList(this.spuId)
+      this.spuImageList = result.data
+    }, 
+
+    /* 
+    获取所有品牌的列表
+    */
+    async getTrademarkList () {
+      const result = await this.$API.trademark.getList()
+      this.trademarkList = result.data
+    }, 
+
+    /* 
+    获取所有销售属性(id/name)列表
+    */
+    async getSaleAttrList () {
+      const result = await this.$API.spu.getSaleList()
+      this.saleAttrList = result.data
+    }, 
+
     handleRemove(file, fileList) {
       console.log(file, fileList);
     },

@@ -19,4 +19,25 @@
       销售属性: 出现在商品详情界面的商品描述信息, 包含属性名与一系列的属性值
 
 ## SPU的分页列表
+    界面布局: Card / CategorySelector / Button / Table / Pagination
+    异步请求获取数据显示
 
+## SpuForm组件
+    显示隐藏切换:
+        父组件: 
+            <SpuForm :visible.sync="isShowSpuForm">
+        子组件: 
+            <Form v-show="visible">
+            this.$emit('update:visible', false)
+    子组件向父组件通信 / 子组件更新父组件的数据
+        函数属性
+        vue自定义事件
+        v-model
+        .sync
+        $parent
+
+## 显示修改SPU的界面发送哪些请求:
+    1. 根据SPU的id获取SPU的详情信息
+    2. 根据SPU的id获取SPU的图片列表
+    3. 获取所有品牌的列表
+    4. 获取所有销售属性(id/name)列表
