@@ -115,3 +115,25 @@
             }
 
     销售属性数据收集:
+        添加spu销售属性: 
+            向数组中添加数据: spuInfo.spuSaleAttrList
+            添加的数据的结构: 
+                {
+                    "baseSaleAttrId": "1",
+                    "saleAttrName": "选择颜色",
+                    "spuSaleAttrValueList": []
+                }
+        添加spu销售属性值: 
+            向spuSaleAttr.spuSaleAttrValueList中添加一个spu销售属性值对象
+                {
+                    "saleAttrValueName": "a",  // 输入的
+                    "baseSaleAttrId": "1" // 销售属性的id
+                }
+            查看模式与编辑模式:
+                标识: edit: true/false
+                输入的属性值名称: saleAttrValueName
+                将这2个数据保存在spu的销售属性对象(row)上
+
+        删除spu销售属性值
+
+        删除spu销售属性

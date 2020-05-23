@@ -28,10 +28,11 @@
     </el-form-item>
 
     <el-form-item label="销售属性">
-      <el-select :placeholder="unUsedSaleAttrList.length>0 ? `还有${unUsedSaleAttrList.length}个未使用` : '没有啦!!!'" value="">
-        <el-option :label="attr.name" :value="attr.id" v-for="attr in unUsedSaleAttrList" :key="attr.id"></el-option>
+      <el-select v-model="attrIdAttrName" :placeholder="unUsedSaleAttrList.length>0 ? `还有${unUsedSaleAttrList.length}个未使用` : '没有啦!!!'" value="">
+        <el-option :label="attr.name" :value="attr.id + ':' + attr.name" v-for="attr in unUsedSaleAttrList" :key="attr.id"></el-option>
       </el-select>
-      <el-button type="primary" icon="el-icon-plus">添加销售属性</el-button>
+      <el-button type="primary" icon="el-icon-plus" @click="addSpuSaleAttr"
+        :disabled="!attrIdAttrName">添加销售属性</el-button>
 
       <el-table 
         style="margin-top: 20px"
@@ -46,11 +47,12 @@
           align="center">
         </el-table-column>
 
-        <el-table-column label="属性名" prop="saleAttrName">
+        <el-table-column label="属性名" prop="saleAttrName" width="150px">
         </el-table-column>
         <el-table-column label="属性值名称列表">
           <template slot-scope="{row, $index}">
             <el-tag
+              style="margin-right: 5px"
               v-for=" (value, index) in row.spuSaleAttrValueList"
               :key="value.id"
               closable
@@ -60,21 +62,21 @@
               {{value.saleAttrValueName}}
             </el-tag>
             <el-input
-              class="input-new-tag"
+              style="width: 120px"
+              placeholder="请输入"
               v-if="row.edit"
               v-model="row.saleAttrValueName"
               ref="saveTagInput"
               size="small"
+              @keyup.enter.native="handleInputConfirm(row)"
+              @blur="handleInputConfirm(row)" 
             >
-            <!-- @keyup.enter.native="handleInputConfirm"
-              @blur="handleInputConfirm" -->
             </el-input>
-            <el-button v-else class="button-new-tag" size="small">+ 添加</el-button>
-            <!-- @click="showInput" -->
+            <el-button v-else class="button-new-tag" size="small" @click="showInput(row)">+ 添加</el-button>
           </template>
         </el-table-column>
        
-        <el-table-column prop="address" label="操作">
+        <el-table-column prop="address" label="操作" width="150px">
           <template slot-scope="{row, $index}">
             <el-button type="danger" icon="el-icon-delete" size="mini">删除</el-button>
           </template>
@@ -112,6 +114,7 @@ export default {
       spuImageList: [], // Spu的图片列表
       trademarkList: [], //品牌列表
       saleAttrList: [], //销售属性列表
+      attrIdAttrName: '', // 用来收集销售属性的id与name,   id:name
     }
   },
 
@@ -136,6 +139,43 @@ export default {
   },
 
   methods: {
+
+    handleInputConfirm (spuSaleAttr) {
+
+    },
+
+    /* 
+    显示输入框: 在当前行
+    */
+    showInput (spuSaleAttr) {
+      // 指定属性对象的edit的值为true
+      if (spuSaleAttr.hasOwnProperty('edit')) {
+        spuSaleAttr.edit = true
+      } else {
+        this.$set(spuSaleAttr, 'edit', true)
+      }
+      
+      // 让输入框自动获得焦点
+      this.$nextTick(() => this.$refs.saveTagInput.focus())
+    },
+
+    /* 
+    添加一个新的spu销售属性数据对象
+    */
+    addSpuSaleAttr () {
+      // 取出收集的销售属性的id与name
+      const [baseSaleAttrId, saleAttrName] = this.attrIdAttrName.split(':')
+
+      // 添加一个新的spu属性对象
+      this.spuInfo.spuSaleAttrList.push({
+          baseSaleAttrId,
+          saleAttrName,
+          spuSaleAttrValueList: []
+      })
+
+      // 删除收集的属性id与name
+      this.attrIdAttrName = ''
+    },
 
     /* 
     由父组件调用的方法
