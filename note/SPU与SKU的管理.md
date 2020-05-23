@@ -87,8 +87,31 @@
                         "isChecked": null
                     },
                 ],
+                // 添加的属性
                 edit: false/true,
                 saleAttrValueName: 'xxx'
             }
-
+        还没使用的销售属性名列表: saleAttrList 与 spuInfo.spuSaleAttrList
+            根据这2个计算产生: 过滤saleAttrList, 找出所有在spuSaleAttrList中还没有用到的
     
+## 收集数据
+    图片数据收集: spuImageList
+        已有图片对象
+            {
+                id:1224
+                imgName:"O1CN01N5IsrF29zFm3vQZpT_!!1714128138.jpg"
+                imgUrl:"http://182.92.128.115:8080/xxx.jpg"
+                spuId:154,
+                name: 'O1CN01N5IsrF29zFm3vQZpT_!!1714128138.jpg',
+                url: 'http://182.92.128.115:8080/xxx.jpg'
+            }
+        新上传图片的结构:
+            {
+                name: 'fa6e854a56ff9b46.png',
+                url: 'blob:http://localhost:9529/0b11fe66-1f6a-432d-b327-e48745825a8c',
+                response: {
+                    data: 'http://182.92.128.115:8080/xxx.png'
+                }
+            }
+
+    销售属性数据收集:

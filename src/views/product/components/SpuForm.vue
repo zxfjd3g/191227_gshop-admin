@@ -14,20 +14,22 @@
     <el-form-item label="SPU图片">
       <el-upload
         :file-list="spuImageList"
-        action="https://jsonplaceholder.typicode.com/posts/"
+        action="/dev-api/admin/product/fileUpload"
         list-type="picture-card"
         :on-preview="handlePictureCardPreview"
-        :on-remove="handleRemove">
+        :on-remove="handleRemove"
+        :on-success="handleSuccess">
         <i class="el-icon-plus"></i>
       </el-upload>
+      <!-- 显示大图的dialog -->
       <el-dialog :visible.sync="dialogVisible">
         <img width="100%" :src="dialogImageUrl" alt="">
       </el-dialog>
     </el-form-item>
 
     <el-form-item label="销售属性">
-      <el-select placeholder="请选择" value="">
-        <el-option label="A" value="1"></el-option>
+      <el-select :placeholder="unUsedSaleAttrList.length>0 ? `还有${unUsedSaleAttrList.length}个未使用` : '没有啦!!!'" value="">
+        <el-option :label="attr.name" :value="attr.id" v-for="attr in unUsedSaleAttrList" :key="attr.id"></el-option>
       </el-select>
       <el-button type="primary" icon="el-icon-plus">添加销售属性</el-button>
 
@@ -96,18 +98,40 @@ export default {
 
   data () {
     return {
-      dialogImageUrl: '',
-      dialogVisible: false,
+      dialogImageUrl: '', // 要显示的大图的url
+      dialogVisible: false, // 是否显示大图dialog, 默认不显示
 
       spuId: '', // 当前要更新的spuInfo的id
       spuInfo: { // SPU的详情信息
         spuName: '',
         description: '',
         tmId: '',
+        spuSaleAttrList: [], // 必须有初始空数组
+        spuImageList: [], // spu销售属性的数组
       }, // 当前SpuInfo对象
       spuImageList: [], // Spu的图片列表
       trademarkList: [], //品牌列表
       saleAttrList: [], //销售属性列表
+    }
+  },
+
+  computed: {
+    /* 
+    得到saleAttrList中还没有使用的属性的数组: 只留下没有的spuInfo.spuSaleAttrList中的属性
+     attr的结构:
+      {
+        "name": "选择颜色"
+      },
+    spuAttr: 
+        {
+          "saleAttrName": "选择版本",
+        }
+    判断: attr的name与spuSaleAttrList数组中每个spuAttr的saleAttrName都不相同
+    */
+    unUsedSaleAttrList () {
+      return this.saleAttrList.filter(
+        attr => this.spuInfo.spuSaleAttrList.every(spuAttr => spuAttr.saleAttrName!==attr.name)
+      )
     }
   },
 
@@ -184,12 +208,38 @@ export default {
       this.saleAttrList = result.data
     }, 
 
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
+    /* 
+    上传图片成功后的回调函数
+    response: 响应体数据对象, 对应的是axios中的response.data
+    file: 新上传成功的图片对象
+    fileList: 所有图片对象的数组
+    */
+    handleSuccess (response, file, fileList) {
+      console.log('handleSuccess', response, file, fileList)
+      // 将已上传图片对象的列表保存起来
+      this.spuImageList = fileList
     },
+
+    /* 
+    点击删除按钮的回调(并没有发请求)
+    file: 被删除图片对象
+    fileList: 剩下的所有图片对象的数组
+    */
+    handleRemove(file, fileList) {
+      console.log('handleRemove', file, fileList)
+      // 将已上传图片对象的列表保存起来
+      this.spuImageList = fileList
+    },
+
+    /* 
+    用来显示大图dialog的回调函数
+    file: 点击的图片信息对象
+    */
     handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
+      // 保存要显示大图的url
+      this.dialogImageUrl = file.url
+      // 显示大图dialog
+      this.dialogVisible = true
     },
 
     back () {
