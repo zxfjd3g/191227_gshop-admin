@@ -57,13 +57,13 @@
               :key="value.id"
               closable
               :disable-transitions="false"
+              @close="row.spuSaleAttrValueList.splice(index, 1)"
               >
-              <!-- @close="handleClose(tag)" -->
               {{value.saleAttrValueName}}
             </el-tag>
             <el-input
-              style="width: 120px"
-              placeholder="请输入"
+              style="width: 100px"
+              placeholder="请输入名称"
               v-if="row.edit"
               v-model="row.saleAttrValueName"
               ref="saveTagInput"
@@ -78,14 +78,15 @@
        
         <el-table-column prop="address" label="操作" width="150px">
           <template slot-scope="{row, $index}">
-            <el-button type="danger" icon="el-icon-delete" size="mini">删除</el-button>
+            <el-button type="danger" icon="el-icon-delete" size="mini" 
+            @click="spuInfo.spuSaleAttrList.splice($index, 1)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-form-item>
 
     <el-form-item>
-      <el-button type="primary">保存</el-button>
+      <el-button type="primary" @click="save">保存</el-button>
       <el-button @click="back">返回</el-button>
     </el-form-item>
 
@@ -140,7 +141,101 @@ export default {
 
   methods: {
 
+    /* 
+    保存(添加/更新)SPU详情信息
+    */
+    async save () {
+      // 取出请求需要的数据, 并做必要的整理工作
+      const {spuInfo, spuImageList} = this
+
+      // 整理1: 处理spuImageList属性
+      /* 
+      当前: spuInfo中的spuImageList属性值为null
+      */
+     /* 
+     已有图片对象
+        {
+            id:1224
+            imgName:"O1CN01N5IsrF29zFm3vQZpT_!!1714128138.jpg"
+            imgUrl:"http://182.92.128.115:8080/xxx.jpg"
+            spuId:154,
+            name: 'O1CN01N5IsrF29zFm3vQZpT_!!1714128138.jpg',
+            url: 'http://182.92.128.115:8080/xxx.jpg'
+        }
+      新上传图片的结构:
+          {
+              name: 'fa6e854a56ff9b46.png',
+              url: 'blob:http://localhost:9529/0b11fe66-1f6a-432d-b327-e48745825a8c',
+              response: {
+                  data: 'http://182.92.128.115:8080/xxx.png'
+              }
+          }
+      提交请求需要的图片对象的结构:
+          {
+            "imgName": "下载 (1).jpg",
+            "imgUrl": "http://47.93.148.192:8080/xxx.jpg"
+          }
+     */
+      spuInfo.spuImageList = spuImageList.map(item => ({
+        imgName: item.name,
+        imgUrl: item.response ? item.response.data : item.url
+      }))
+
+      // 整理2: 处理spuSaleAttrList属性
+        /* 
+        1. 删除不必要的参数数据: 数组元素对象(属性对象)很可能有2个不必要的数据
+        2. 过滤掉没有一个属性值对象的属性
+        */
+      spuInfo.spuSaleAttrList = spuInfo.spuSaleAttrList.filter((attr) => {
+        delete attr.edit
+        delete attr.saleAttrValueName
+        return attr.spuSaleAttrValueList.length>0
+      })
+
+      // 发送保存SPU详情信息的异步ajax请求
+      const result = await this.$API.spu.addUpdate(spuInfo)
+      // 成功了, ...
+      if (result.code===200) {
+        this.$message.success('保存SPU成功')
+      } else {
+        // 失败了, 提示
+        this.$message.error('保存SPU失败')
+      }
+    },
+
+    /* 
+    确定添加一个新的SPU销售属性值对象:
+    向spuSaleAttr.spuSaleAttrValueList中添加
+    {
+        "saleAttrValueName": "a",  // 输入的
+        "baseSaleAttrId": "1" // 销售属性的id
+    }
+    */
     handleInputConfirm (spuSaleAttr) {
+      // 取出需要的数据
+      const {saleAttrValueName, baseSaleAttrId} = spuSaleAttr
+      // console.log('----handleInputConfirm', saleAttrValueName)
+      // 限制1: 属性值名称必须有输入
+      if (!saleAttrValueName) {   // 为undefined / ''
+        spuSaleAttr.edit = false
+        return
+      }
+      // 限制2: 输入的属性值名称不能与已有重复
+      const isRepeat = spuSaleAttr.spuSaleAttrValueList.some(value => value.saleAttrValueName===saleAttrValueName)
+      if (isRepeat) {
+        this.$message.warning('不能重复!')
+        return
+      }
+
+      // 向spuSaleAttr.spuSaleAttrValueList中添加一个新的SPU销售属性值对象
+      spuSaleAttr.spuSaleAttrValueList.push({
+        saleAttrValueName,
+        baseSaleAttrId
+      })
+
+      // 显示查看模式
+      spuSaleAttr.edit = false
+      spuSaleAttr.saleAttrValueName = ''
 
     },
 
