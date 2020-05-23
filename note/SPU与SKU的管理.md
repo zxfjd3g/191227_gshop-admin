@@ -35,6 +35,10 @@
         v-model
         .sync
         $parent
+    父组件更新子组件的数据
+        props
+        ref
+        $children
 
     显示修改SPU的界面发送哪些请求:
         1. 根据SPU的id获取SPU的详情信息
@@ -44,3 +48,47 @@
 
     父组件通知子组件发请求
         利用ref技术: 通过ref得到子组件对象, 进而调用其方法同时传递数据
+
+    显示添加SPU的界面发送哪些请求
+        1. 获取所有品牌的列表
+        2. 获取所有销售属性(id/name)列表
+
+    显示初始请求的数据
+        品牌列表: trademarkList 和 spuInfo.tmId   ==> 简单
+        SPU图片列表: spuImageList
+            现有数据结构:
+                {
+                    id:1224
+                    imgName:"O1CN01N5IsrF29zFm3vQZpT_!!1714128138.jpg"
+                    imgUrl:"http://182.92.128.115:8080/xxx.jpg"
+                    spuId:154
+                }
+            要求的数据结构:
+                 {
+                     name: 'food.jpg', 
+                     url: 'https://xxx.cdn.com/xxx.jpg'
+                }
+            需要对数据进行整理:
+                给数组元素对象添加name和url属性
+            注意: 开发中请求获取的数据不能直接显示, 而需要进行特定处理/整理之后才能显示
+        spu销售属性列表: spuInfo.spuSaleAttrList数组
+            {
+                "id": 133,
+                "spuId": 26,
+                "baseSaleAttrId": 2,
+                "saleAttrName": "选择版本",
+                "spuSaleAttrValueList": [
+                    {
+                        "id": 225,
+                        "spuId": 26,
+                        "baseSaleAttrId": 2,
+                        "saleAttrValueName": "aa",
+                        "saleAttrName": "选择版本",
+                        "isChecked": null
+                    },
+                ],
+                edit: false/true,
+                saleAttrValueName: 'xxx'
+            }
+
+    
