@@ -13,6 +13,7 @@
     </el-form-item>
     <el-form-item label="SPU图片">
       <el-upload
+        multiple
         :file-list="spuImageList"
         action="/dev-api/admin/product/fileUpload"
         list-type="picture-card"

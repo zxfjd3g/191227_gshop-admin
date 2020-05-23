@@ -124,7 +124,8 @@
                     "spuSaleAttrValueList": []
                 }
         添加spu销售属性值: 
-            向spuSaleAttr.spuSaleAttrValueList中添加一个spu销售属性值对象
+            最终目标: 
+                向spuSaleAttr.spuSaleAttrValueList中添加一个spu销售属性值对象
                 {
                     "saleAttrValueName": "a",  // 输入的
                     "baseSaleAttrId": "1" // 销售属性的id
@@ -133,7 +134,22 @@
                 标识: edit: true/false
                 输入的属性值名称: saleAttrValueName
                 将这2个数据保存在spu的销售属性对象(row)上
+            从查看模式切换到编辑械
+                给当前行的属性对象添加edit属性: $set()
+                输入框自动获得焦点: $nextTick()
+            确定添加spu销售属性值对象
+                必须输入的内容
+                不能与已有的重复
 
         删除spu销售属性值
-
+            简单
         删除spu销售属性
+            简单
+
+## 提交添加/更新SPU的请求
+    收集整理请求参数数据
+        整理1: spu图片列表中图片对象的结构不对, 利用map方法生成满足要求的图片数据对象
+        整理2: spu销售属性列表中的属性对象包含一些没必要的属性, 没有一个属性值名称的属性应该过滤掉
+    发送ajax请求
+    成功了,..
+    失败了
