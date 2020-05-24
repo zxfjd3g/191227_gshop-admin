@@ -52,7 +52,7 @@
        -->
       <SpuForm ref="spuForm" :visible.sync="isShowSpuForm"></SpuForm>
 
-      <SkuForm v-show="isShowSkuForm"></SkuForm>
+      <SkuForm v-show="isShowSkuForm" @cancel="isShowSkuForm=false"></SkuForm>
 
     </el-card>
   </div>
