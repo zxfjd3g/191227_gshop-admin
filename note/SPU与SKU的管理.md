@@ -53,48 +53,48 @@
         1. 获取所有品牌的列表
         2. 获取所有销售属性(id/name)列表
 
-    显示初始请求的数据
-        品牌列表: trademarkList 和 spuInfo.tmId   ==> 简单
-        SPU图片列表: spuImageList
-            现有数据结构:
-                {
-                    id:1224
-                    imgName:"O1CN01N5IsrF29zFm3vQZpT_!!1714128138.jpg"
-                    imgUrl:"http://182.92.128.115:8080/xxx.jpg"
-                    spuId:154
-                }
-            要求的数据结构:
-                 {
-                     name: 'food.jpg', 
-                     url: 'https://xxx.cdn.com/xxx.jpg'
-                }
-            需要对数据进行整理:
-                给数组元素对象添加name和url属性
-            注意: 开发中请求获取的数据不能直接显示, 而需要进行特定处理/整理之后才能显示
-        spu销售属性列表: spuInfo.spuSaleAttrList数组
+## 显示初始请求的数据(SpuForm组件)
+    品牌列表: trademarkList 和 spuInfo.tmId   ==> 简单
+    SPU图片列表: spuImageList
+        现有数据结构:
             {
-                "id": 133,
-                "spuId": 26,
-                "baseSaleAttrId": 2,
-                "saleAttrName": "选择版本",
-                "spuSaleAttrValueList": [
-                    {
-                        "id": 225,
-                        "spuId": 26,
-                        "baseSaleAttrId": 2,
-                        "saleAttrValueName": "aa",
-                        "saleAttrName": "选择版本",
-                        "isChecked": null
-                    },
-                ],
-                // 添加的属性
-                edit: false/true,
-                saleAttrValueName: 'xxx'
+                id:1224
+                imgName:"O1CN01N5IsrF29zFm3vQZpT_!!1714128138.jpg"
+                imgUrl:"http://182.92.128.115:8080/xxx.jpg"
+                spuId:154
             }
-        还没使用的销售属性名列表: saleAttrList 与 spuInfo.spuSaleAttrList
-            根据这2个计算产生: 过滤saleAttrList, 找出所有在spuSaleAttrList中还没有用到的
+        要求的数据结构:
+            {
+                name: 'food.jpg', 
+                url: 'https://xxx.cdn.com/xxx.jpg'
+            }
+        需要对数据进行整理:
+            给数组元素对象添加name和url属性
+        注意: 开发中请求获取的数据不能直接显示, 而需要进行特定处理/整理之后才能显示
+    spu销售属性列表: spuInfo.spuSaleAttrList数组
+        {
+            "id": 133,
+            "spuId": 26,
+            "baseSaleAttrId": 2,
+            "saleAttrName": "选择版本",
+            "spuSaleAttrValueList": [
+                {
+                    "id": 225,
+                    "spuId": 26,
+                    "baseSaleAttrId": 2,
+                    "saleAttrValueName": "aa",
+                    "saleAttrName": "选择版本",
+                    "isChecked": null
+                },
+            ],
+            // 添加的属性
+            edit: false/true,
+            saleAttrValueName: 'xxx'
+        }
+    还没使用的销售属性名列表: saleAttrList 与 spuInfo.spuSaleAttrList
+        根据这2个计算产生: 过滤saleAttrList, 找出所有在spuSaleAttrList中还没有用到的
     
-## 收集数据
+## 收集数据(SpuForm组件)
     图片数据收集: spuImageList
         已有图片对象
             {
@@ -146,11 +146,10 @@
         删除spu销售属性
             简单
 
-## 提交添加/更新SPU的请求
+## 提交添加/更新SPU的请求(SpuForm组件)
     收集整理请求参数数据
         整理1: spu图片列表中图片对象的结构不对, 利用map方法生成满足要求的图片数据对象
         整理2: spu销售属性列表中的属性对象包含一些没必要的属性, 没有一个属性值名称的属性应该过滤掉
     发送ajax请求
     成功了,..
     失败了
-    
