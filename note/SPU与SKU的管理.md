@@ -168,9 +168,121 @@
         根据spu的ID获取SPU图片列表
         根据SPU的ID获取SPU销售属性列表
     显示数据
-
+        attrList中的attr结构:
+            {
+                "id": 1,
+                "attrName": "价格",
+                "categoryId": 61,
+                "categoryLevel": 3,
+                "attrValueList": [
+                    {
+                        "id": 207,
+                        "valueName": "500-999",
+                        "attrId": 1
+                    }
+                ]
+            }
+        spuImageList中的image结构:
+            {
+                "id": 333,
+                "spuId": 26,
+                "imgName": "rBHu8l6UcKyAfzDsAAAPN5YrVxw870.jpg",
+                "imgUrl": "http://47.93.148.192:8080/xxx.jpg"
+            }
+        spuSaleAttrList中的attr结构:
+            {
+                "id": 136,
+                "spuId": 30,
+                "baseSaleAttrId": 1,
+                "saleAttrName": "选择颜色",
+                "spuSaleAttrValueList": [
+                    {
+                        "id": 258,
+                        "spuId": 30,
+                        "baseSaleAttrId": 1,
+                        "saleAttrValueName": "a",
+                        "saleAttrName": "选择颜色",
+                        "isChecked": null
+                    }
+                ]
+            }
     交互收集数据
-
+        简单:
+            收集父组件传入的
+            v-model收集
+        平台属性数据
+            现有数据: attrList
+                {
+                    "id": 1,
+                    "attrName": "价格",
+                    "categoryId": 61,
+                    "categoryLevel": 3,
+                    "attrValueList": [
+                        {
+                            "id": 207,
+                            "valueName": "500-999",
+                            "attrId": 1
+                        }
+                    ]
+                }
+            目标数据: skuInfo.skuAttrValueList
+                {
+                    "attrId": "1",
+                    "valueId": "207"
+                }
+            收集数据: 到平台属性对象上添加一个新属性attrIdValueId
+                {
+                    attrIdValueId: '1:207'
+                }
+        销售属性:
+            现有数据: spuSaleAttrList
+                {
+                    "id": 136,
+                    "spuId": 30,
+                    "baseSaleAttrId": 1,
+                    "saleAttrName": "选择颜色",
+                    "spuSaleAttrValueList": [
+                        {
+                            "id": 258,
+                            "spuId": 30,
+                            "baseSaleAttrId": 1,
+                            "saleAttrValueName": "a",
+                            "saleAttrName": "选择颜色",
+                            "isChecked": null
+                        }
+                    ]
+                }
+            目标数据: skuInfo.skuSaleAttrValueList
+                {
+                "saleAttrValueId": 258
+                }
+            收集数据: 到销售属性对象上添加一个新属性saleAttrValueId
+                {
+                    saleAttrValueId: '258'
+                }
+        sku图片列表和默认图片url
+            现有数据: spuImageList
+                {
+                    "id": 333,
+                    "spuId": 26,
+                    "imgName": "rBHu8l6UcKyAfzDsAAAPN5YrVxw870.jpg",
+                    "imgUrl": "http://47.93.148.192:8080/xxx.jpg"
+                }
+            目标数据:
+                skuImageList: [
+                        {
+                        "imgName": "下载 (1).jpg",
+                        "imgUrl": "http://47.93.148.192:8080/xxx.jpg",
+                        "spuImgId": 337, // 当前Spu图片的id
+                        "isDefault": "1"   // 默认为"1", 非默认为"0"
+                        }
+                    ]
+                skuDefaultImg: 'http://47.93.148.192:8080/xxx.jpg'
+            收集数据:
+                @selection-change="handleSelectionChange"
+                 handleSelectionChange(val) { // 所有选中项对应图片对象的数组
+                    this.multipleSelection = val;
+                }
     整理数据后请求
 
     请求完成后更新界面
