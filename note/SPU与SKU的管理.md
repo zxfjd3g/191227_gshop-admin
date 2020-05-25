@@ -279,10 +279,11 @@
                     ]
                 skuDefaultImg: 'http://47.93.148.192:8080/xxx.jpg'
             收集数据:
-                @selection-change="handleSelectionChange"
-                 handleSelectionChange(val) { // 所有选中项对应图片对象的数组
-                    this.multipleSelection = val;
-                }
+                selectedSpuImageList
+                selection-change事件监听
+                给请求得到的每个spuImage添加一个isDefault属性标识是否是默认图片
+                点击设置按钮时, 直接更新isDefault属性, 不用使用$set()
+
     整理数据后请求
 
     请求完成后更新界面

@@ -31,7 +31,9 @@
                 @click="showUpdateSpu(row.id)"></hint-button>
               <hint-button title="查看所有SKU" type="info" icon="el-icon-info" size="mini"
                 @click="showSkuList(row)"></hint-button>
-              <hint-button title="删除SPU" type="danger" icon="el-icon-delete" size="mini"></hint-button>
+              <el-popconfirm title="确定删除吗?" @onConfirm="deleteSpu(row.id)">
+                <hint-button slot="reference" title="删除SPU" type="danger" icon="el-icon-delete" size="mini"></hint-button>
+              </el-popconfirm>
             </template>
           </el-table-column>
         </el-table>
@@ -118,6 +120,19 @@ export default {
   },
 
   methods: {
+
+    /* 
+    删除指定ID的SPU
+    */
+    async deleteSpu (spuId) {
+      const result = await this.$API.spu.remove(spuId)
+      if (result.code===200) {
+        this.$message.success('删除成功')
+        this.getSpuList()
+      } else {
+        this.$message.error(result.data || result.message || '删除失败')
+      }
+    },
 
     /* 
     显示指定spu下所有sku的列表
