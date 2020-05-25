@@ -81,15 +81,9 @@
 
       <el-table-column label="操作" width="150" align="center">
         <template slot-scope="scope">
-          <a href="javascript:" title="查看">
-            <el-button size="mini" type="primary" icon="el-icon-thumb" circle></el-button>
-          </a>
-          <a href="javascript:" title="修改">
-            <el-button size="mini" type="primary" icon="el-icon-edit" circle></el-button>
-          </a>
-          <a href="javascript:" title="删除">
-            <el-button size="mini" type="danger" icon="el-icon-delete" circle></el-button>
-          </a>
+          <hint-button title="查看"  size="mini" type="primary" icon="el-icon-thumb" circle></hint-button>
+          <hint-button title="修改" size="mini" type="primary" icon="el-icon-edit" circle></hint-button>
+          <hint-button title="删除" size="mini" type="danger" icon="el-icon-delete" circle></hint-button>
         </template>
       </el-table-column>
     </el-table>
