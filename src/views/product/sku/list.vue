@@ -29,10 +29,10 @@
 
       <el-table-column label="操作" width="250" align="center">
         <template slot-scope="{row}">
-          <HintButton v-if="row.isSale == 0" title="上架" type="success" size="mini"
+          <HintButton v-if="row.isSale == 0" title="上架" type="info" size="mini"
             icon="el-icon-top" @click="onSale(row.id)" />
 
-          <HintButton v-if="row.isSale == 1" title="下架" type="warning" size="mini"
+          <HintButton v-if="row.isSale == 1" title="下架" type="success" size="mini"
             icon="el-icon-bottom" @click="cancelSale(row.id)" />
 
           <HintButton title="修改" type="primary" size="mini"
@@ -98,7 +98,7 @@
       <el-row >
         <el-col :span="5">商品图片</el-col>
         <el-col :span="16">
-           <el-carousel class="img-carousel" trigger="click" height="400px" :autoplay="false" arrow="always">
+           <el-carousel class="img-carousel" trigger="click" height="400px">
             <el-carousel-item v-for="item in skuInfo.skuImageList" :key="item.id">
               <img :src="item.imgUrl" alt="">
             </el-carousel-item>

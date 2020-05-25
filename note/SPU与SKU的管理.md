@@ -292,5 +292,43 @@
                         isDefault: '1'
                     }
     整理数据后请求
-
+        整理1: skuAttrValueList
+            数据来源: attrList
+                {
+                    attrIdValueId: '1:207'  // 可能有, 也可能没有
+                }
+            目标数据结构:
+                {
+                    "attrId": "1",
+                    "valueId": "207"
+                }
+        整理2: skuSaleAttrValueList
+            数据来源: spuSaleAttrList
+                {
+                    saleAttrValueId: '258'  // 可能有, 也可能没有
+                }
+            目标数据结构:
+                {
+                    "saleAttrValueId": 258
+                }
+        整理3: skuImageList
+            数据来源: selectedSpuImageList
+                {
+                    "id": 333,
+                    "spuId": 26,
+                    "imgName": "rBHu8l6UcKyAfzDsAAAPN5YrVxw870.jpg",
+                    "imgUrl": "http://47.93.148.192:8080/xxx.jpg",
+                    "isDefault": "1"  // 也可能是"0"
+                }
+            目标数据结构:
+                {
+                    "imgName": "下载 (1).jpg",
+                    "imgUrl": "http://47.93.148.192:8080/xxx.jpg",
+                    "spuImgId": 337, // 当前Spu图片的id
+                    "isDefault": "1"   // 默认为"1", 非默认为"0"
+                }
     请求完成后更新界面
+        重置数据
+        返回列表界面: 通知父组件
+            方式一: 分发自定义事件
+            方式二: 调用函数属性
