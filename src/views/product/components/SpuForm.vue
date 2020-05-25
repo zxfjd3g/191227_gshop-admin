@@ -198,10 +198,46 @@ export default {
       // 成功了, ...
       if (result.code===200) {
         this.$message.success('保存SPU成功')
+
+        // 重置当前组件的数据
+        this.resetData()
+        // 回到列表页面
+        this.$emit('update:visible', false)
+        // 通知父组件重新获取分页列表数据显示  ==> 获取哪一页?
+          /* 
+          子向父通信: 
+          当前不需要传递数据, 但需要通知父组件
+          1. 函数props
+          2. 自定义事件
+          3. $parent
+          */
+        this.$emit('saveSuccess')
       } else {
         // 失败了, 提示
         this.$message.error('保存SPU失败')
       }
+    },
+
+    /* 
+    重置当前组件的数据
+    */
+    resetData () {
+      this.dialogImageUrl = '' 
+      this.dialogVisible = false 
+
+      this.spuId = null
+      this.spuInfo = {
+        category3Id: '',
+        spuName: '',
+        description: '',
+        tmId: '',
+        spuImageList: [],
+        spuSaleAttrList: []
+      } 
+      this.spuImageList = [] 
+      this.trademarkList = [] 
+      this.saleAttrList = []
+      this.attrIdAttrName = ''
     },
 
     /* 
@@ -277,7 +313,10 @@ export default {
     由父组件调用的方法
     请求加载相关数据
     */
-    initLoadAddData () {
+    initLoadAddData (category3Id) {
+      // 保存到spuInfo中
+      this.spuInfo.category3Id = category3Id
+
       // 3. 获取所有品牌的列表
       this.getTrademarkList()
       // 4. 获取所有销售属性(id/name)列表
@@ -379,8 +418,12 @@ export default {
     },
 
     back () {
-      // 分发自定义事件, 让当前Dialog关闭
+      // 重置数据
+      this.resetData()
+      // 分发自定义事件, 关闭当前SpuForm界面
       this.$emit('update:visible', false)
+      // 分发自定义事件, 通知父组件当前组件取消了操作
+      this.$emit('cancel')
     }
   }
 }
