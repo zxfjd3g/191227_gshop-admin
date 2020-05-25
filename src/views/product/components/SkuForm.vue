@@ -62,7 +62,7 @@
     </el-form-item>
 
     <el-form-item>
-      <el-button type="primary">保存</el-button>
+      <el-button type="primary" @click="save">保存</el-button>
       <el-button @click="back">返回</el-button>
     </el-form-item>
   </el-form>
@@ -71,6 +71,10 @@
 <script>
 export default {
   name: 'SkuForm',
+
+  props: {
+    saveSuccess: Function,
+  },
 
   data () {
     return {
@@ -103,6 +107,97 @@ export default {
   },
 
   methods: {
+
+    /* 
+    保存SKU信息
+    */
+    async save () {
+      // 整理收集的数据
+      const {skuInfo, attrList, spuSaleAttrList, selectedSpuImageList} = this
+
+      // 整理1: skuAttrValueList
+      /* 
+      数据来源: attrList
+        {
+            attrIdValueId: '1:207'  // 可能有, 也可能没有
+        }
+      目标数据结构:
+        {
+            "attrId": "1",
+            "valueId": "207"
+        }
+      */
+      // 只根据有attrIdValueId的attr来生成包含目标结构的数组
+      skuInfo.skuAttrValueList = attrList.reduce((pre, attr) => {
+        if (attr.attrIdValueId) {
+          const [attrId, valueId] = attr.attrIdValueId.split(':')
+          pre.push({
+            attrId,
+            valueId
+          })
+        }
+        return pre
+      }, [])
+
+      // 整理2: skuSaleAttrValueList
+      /* 
+      数据来源: spuSaleAttrList
+        {
+            saleAttrValueId: '258'  // 可能有, 也可能没有
+        }
+      目标数据结构:
+        {
+            "saleAttrValueId": 258
+        }
+      */
+      // 只根据有saleAttrValueId的attr来生成包含目标结构的数组
+      skuInfo.skuSaleAttrValueList = spuSaleAttrList.reduce((pre, attr) => {
+        if (attr.saleAttrValueId) {
+          pre.push({
+            saleAttrValueId: attr.saleAttrValueId
+          })
+        }
+        return pre
+      }, [])
+
+      // 整理3: skuImageList
+       /* 
+      数据来源: selectedSpuImageList
+        {
+            "id": 333,
+            "spuId": 26,
+            "imgName": "rBHu8l6UcKyAfzDsAAAPN5YrVxw870.jpg",
+            "imgUrl": "http://47.93.148.192:8080/xxx.jpg",
+            "isDefault": "1"  // 也可能是"0"
+        }
+      目标数据结构:
+        {
+            "imgName": "下载 (1).jpg",
+            "imgUrl": "http://47.93.148.192:8080/xxx.jpg",
+            "spuImgId": 337, // 当前Spu图片的id
+            "isDefault": "1"   // 默认为"1", 非默认为"0"
+        }
+      */
+      skuInfo.skuImageList = selectedSpuImageList.map(image => ({
+        imgName: image.imgName,
+        imgUrl: image.imgUrl,
+        spuImgId: image.id, // 当前Spu图片的id
+        isDefault: image.isDefault   // 默认为"1", 非默认为"0"
+      }))
+
+      // 发送异步ajax请求保存SKU信息
+      const result = await this.$API.sku.addUpdate(skuInfo)
+      // 成功了, ...
+      if (result.code===200) {
+        this.$message.success('保存SKU成功')
+        // 重置数据
+        this.resetData()
+        // 通知父组件保存成功
+        this.saveSuccess()
+      } else { //失败了, 提示
+        this.$message.error('保存SKU信息失败')
+      }
+    },
 
     /* 
     将当前图片设置为默认图片
@@ -165,9 +260,37 @@ export default {
       this.spuSaleAttrList = results[2].data
     },
 
+    /* 
+    取消返回列表界面
+    */
     back () {
+      this.resetData()
       this.$emit('cancel')
-    }
+    },
+
+    /* 
+    重置一下数据
+    */
+    resetData () {
+      this.skuInfo = {
+        category3Id: '',
+        spuId: '',
+        tmId: '',
+        skuName: '',
+        skuDesc: '',
+        price: '',
+        weight: '',
+        skuDefaultImg: '',
+        skuAttrValueList: [],
+        skuSaleAttrValueList: [],
+        skuImageList: [],
+      },
+      this.spu = {}, // 所属的SPU对象
+      this.attrList = [] // 平台属性列表
+      this.spuImageList = [] // SPU的图片列表
+      this.spuSaleAttrList = [] // SPU的销售属性列表
+      this.selectedImageList = [] // 所有选中图片对象的列表
+    },
   }
 }
 </script>

@@ -271,10 +271,10 @@
             目标数据:
                 skuImageList: [
                         {
-                        "imgName": "下载 (1).jpg",
-                        "imgUrl": "http://47.93.148.192:8080/xxx.jpg",
-                        "spuImgId": 337, // 当前Spu图片的id
-                        "isDefault": "1"   // 默认为"1", 非默认为"0"
+                            "imgName": "下载 (1).jpg",
+                            "imgUrl": "http://47.93.148.192:8080/xxx.jpg",
+                            "spuImgId": 337, // 当前Spu图片的id
+                            "isDefault": "1"   // 默认为"1", 非默认为"0"
                         }
                     ]
                 skuDefaultImg: 'http://47.93.148.192:8080/xxx.jpg'
@@ -283,7 +283,14 @@
                 selection-change事件监听
                 给请求得到的每个spuImage添加一个isDefault属性标识是否是默认图片
                 点击设置按钮时, 直接更新isDefault属性, 不用使用$set()
-
+                    skuInfo.skuDefaultImg = 'xxx'
+                    {
+                        "id": 333,
+                        "spuId": 26,
+                        "imgName": "rBHu8l6UcKyAfzDsAAAPN5YrVxw870.jpg",
+                        "imgUrl": "http://47.93.148.192:8080/xxx.jpg",
+                        isDefault: '1'
+                    }
     整理数据后请求
 
     请求完成后更新界面

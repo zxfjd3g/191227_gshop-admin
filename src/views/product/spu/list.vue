@@ -1,12 +1,12 @@
 <template>
   <div>
-    <el-card style="margin-bottom: 20px">
-      <category-selector @categoryChange="handleCategoryChange"></category-selector>
+    <el-card style="margin-bottom: 20px" v-show="!isShowSkuForm">
+      <category-selector ref="cs" @categoryChange="handleCategoryChange"></category-selector>
     </el-card>
     <el-card>
       <div v-show="!isShowSpuForm && !isShowSkuForm">
         <el-button type="primary"  icon="el-icon-plus" style="margin-bottom: 20px"
-          @click="showAddSpu">添加SPU</el-button>
+          @click="showAddSpu" :disabled="!category3Id">添加SPU</el-button>
         <el-table 
           v-loading="loading"
           :data="spuList"
@@ -57,7 +57,8 @@
       <SpuForm ref="spuForm" :visible.sync="isShowSpuForm" @saveSuccess="handleSaveSuccess"
         @cancel="handleCancel"></SpuForm>
 
-      <SkuForm ref="skuForm" v-show="isShowSkuForm" @cancel="isShowSkuForm=false"></SkuForm>
+      <SkuForm ref="skuForm" v-show="isShowSkuForm" @cancel="isShowSkuForm=false" 
+        :saveSuccess="() => isShowSkuForm=false"></SkuForm>
 
     </el-card>
 
@@ -113,10 +114,19 @@ export default {
   */
 
   mounted () {
-    this.category1Id = 2
-    this.category2Id = 13
-    this.category3Id = 61
-    this.getSpuList()
+    // this.category1Id = 2
+    // this.category2Id = 13
+    // this.category3Id = 61
+    // this.getSpuList()
+  },
+
+  watch: {
+    /* 
+    根据 isShowSpuForm的值来更新3级列表的可操作性
+    */
+    isShowSpuForm (value) { 
+      this.$refs.cs.disabled = value
+    } 
   },
 
   methods: {
