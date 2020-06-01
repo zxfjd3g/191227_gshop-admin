@@ -1,29 +1,26 @@
 <template>
-  <div class="app-container">
-    <!-- 查询表单 -->
-    <!--查询表单-->
-    <el-form :inline="true" class="demo-form-inline">
+  <div>
+    <el-form inline>
       <el-form-item>
-        <el-input v-model="searchObj.roleName" placeholder="角色名称"/>
+        <el-input v-model="tempSearchObj.roleName" placeholder="角色名称"/>
       </el-form-item>
 
-      <el-button type="primary" icon="el-icon-search" @click="fetchData()">查询</el-button>
-      <el-button type="default" @click="resetData()">清空</el-button>
+      <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
+      <el-button @click="resetSearch">清空</el-button>
     </el-form>
 
-    <!-- 工具条 -->
     <div style="margin-bottom: 20px">
       <el-button type="primary"  @click="addRole" v-if="$hasBP('role.add')">添加</el-button>
-      <el-button :disabled="multipleSelection.length === 0" type="danger" @click="removeRows()" v-if="$hasBP('role.remove')">批量删除</el-button>
+      <el-button type="danger" @click="removeRoles()" :disabled="selectedRoles.length === 0"
+        v-if="$hasBP('role.remove')">批量删除</el-button>
     </div>
 
-    <!-- 角色列表 -->
     <el-table
       border
+      stripe
       style="width: 960px"
       v-loading="listLoading"
-      :data="list"
-      stripe
+      :data="roles"
       @selection-change="handleSelectionChange">
 
       <el-table-column
@@ -31,12 +28,10 @@
         width="55" />
 
       <el-table-column
+        type="index"
         label="序号"
-        width="70"
+        width="80"
         align="center">
-        <template slot-scope="scope">
-          {{ (page - 1) * limit + scope.$index + 1 }}
-        </template>
       </el-table-column>
 
       <el-table-column label="角色名称">
@@ -50,27 +45,27 @@
               type="warning"
               @click="cancelEdit(row)"
             >
-              cancel
+              取消
             </el-button>
           </template>
           <span v-else>{{ row.roleName }}</span>
         </template>
       </el-table-column>
       
-
-
       <el-table-column label="操作" width="200" align="center">
         <template slot-scope="{row}">
-          <router-link :to="'/acl/role/auth/'+row.id" v-if="$hasBP('role.acl')">
+          <router-link :to="`/acl/role/auth/${row.id}?roleName=${row.roleName}`" 
+            v-if="$hasBP('role.acl')">
             <HintButton size="mini" type="info" icon="el-icon-info" title="角色授权"/>
           </router-link>
           <HintButton size="mini" type="primary" icon="el-icon-check" title="确定" 
             @click="updateRole(row)" v-if="$hasBP('role.update') && row.edit"/>
+          
           <HintButton size="mini" type="primary" icon="el-icon-edit" title="修改角色" 
             @click="row.edit= true" v-if="$hasBP('role.update') && !row.edit"/>
           
           <HintButton size="mini" type="danger" icon="el-icon-delete" title="删除角色"
-            @click="removeDataById(row.id)" v-if="$hasBP('role.remove')" />
+            @click="removeRole(row)" v-if="$hasBP('role.remove')" />
         </template>
       </el-table-column>
     </el-table>
@@ -81,10 +76,10 @@
       :total="total"
       :page-size="limit"
       :page-sizes="[5, 10, 20, 30, 40, 50, 100]"
-      style="padding: 30px 0; text-align: center;"
-      layout="sizes, prev, pager, next, jumper, ->, total, slot"
-      @current-change="fetchData"
-      @size-change="changeSize"
+      style="padding: 20px 0;"
+      layout="prev, pager, next, jumper, ->, sizes, total"
+      @current-change="getRoles"
+      @size-change="handleSizeChange"
     />
   </div>
 </template>
@@ -98,155 +93,153 @@ export default {
   data() {
     return {
       listLoading: true, // 数据是否正在加载
-      list: null, // 角色列表
-      total: 0, // 数据库中的总记录数
-      page: 1, // 默认页码
-      limit: 10, // 每页记录数
-      searchObj: {}, // 查询表单对象
-      multipleSelection: [] // 批量选择中选择的记录列表
+      roles: [], // 角色列表
+      total: 0, // 总记录数
+      page: 1, // 当前页码
+      limit: 5, // 每页记录数
+      tempSearchObj: {
+        roleName: '',
+      },
+      searchObj: {
+        roleName: '',
+      },
+      selectedRoles: [] // 所有选中的角色列表
     }
   },
 
   mounted() {
-    this.fetchData()
+    this.getRoles()
   },
 
   methods: {
 
-    cancelEdit(row) {
-      row.roleName = row.originRoleName
-      row.edit = false
-      this.$message({
-        message: '取消角色修改',
-        type: 'warning'
+    /* 
+    取消修改
+    */
+    cancelEdit(role) {
+      role.roleName = role.originRoleName
+      role.edit = false
+      this.$message.warning('取消角色修改')
+    },
+
+    /* 
+    更新角色
+    */
+    updateRole (role) {
+      this.$API.role.updateById({id: role.id, roleName: role.roleName}).then(result => {
+        this.$message.success(result.message|| '更新角色成功!')
+        this.getRoles(this.page)
       })
     },
 
-    updateRole (row) {
-      const role = {id: row.id, roleName: row.roleName}
-      this.$API.role.updateById(role).then(result => {
-        if (result.success) {
-          row.edit = false
-          row.originRoleName = row.roleName
-          this.$message({
-            type: 'success',
-            message: result.message
-          })
-        }
-      })
+    /* 
+    每页数量发生改变的监听
+    */
+    handleSizeChange(pageSize) {
+      this.limit = pageSize
+      this.getRoles()
     },
 
-    // 当页码发生改变的时候
-    changeSize(size) {
-      console.log(size)
-      this.limit = size
-      this.fetchData(1)
-    },
-
+    /* 
+    添加角色
+    */
     addRole(){
+      // 显示添加界面
       this.$prompt('请输入新名称', '添加角色', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
       }).then(({ value }) => {
         this.$API.role.save({roleName: value}).then(result => {
-          if (result.success) {
-            this.fetchData()
-            this.$message({
-              type: 'success',
-              message: result.message
-            })
-          }
+          this.$message.success(result.message || '添加角色成功')
+          this.getRoles()
         })
       }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '取消添加'
-        });       
-      });
-    },
-
-    // 加载角色列表数据
-    fetchData(page = 1) {
-      // 异步获取远程数据（ajax）
-      this.page = page
-      this.listLoading = true
-      this.$API.role.getPageList(this.page, this.limit, this.searchObj).then(
-        result => {
-          this.list = result.data.items.map(item => {
-            // this.$set(item, 'edit', false)
-            item.edit = false
-            item.originRoleName = item.roleName
-            return item
-          })
-          this.total = result.data.total
-
-          // 数据加载并绑定成功
-          this.listLoading = false
-        }
-      )
-    },
-
-    // 重置查询表单
-    resetData() {
-      this.searchObj = {}
-      this.fetchData()
-    },
-
-    // 根据id删除数据
-    removeDataById(id) {
-      // debugger
-      this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => { // promise
-        // 点击确定，远程调用ajax
-        return this.$API.role.removeById(id)
-      }).then((result) => {
-        this.fetchData(this.page)
-        if (result.success) {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-        }
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
+        this.$message.warning('取消添加')
       })
     },
 
-    // 当表格复选框选项发生变化的时候触发
-    handleSelectionChange(selection) {
-      this.multipleSelection = selection
+    /* 
+    异步获取角色分页列表
+    */
+    getRoles(page = 1) {
+      this.page = page
+      this.listLoading = true
+      const {limit, searchObj} = this
+      this.$API.role.getPageList(page, limit, searchObj).then(
+        result => {
+          const {items, total} = result.data
+          this.roles = items.map(item => {
+            item.edit = false // 用于标识是否显示编辑输入框的属性
+            item.originRoleName = item.roleName // 缓存角色名称, 用于取消
+            return item
+          })
+          this.total = total
+          this.listLoading = false
+        }
+      ).catch(error => {
+        this.listLoading = false
+      })
     },
 
-    // 批量删除
-    removeRows() {
-      this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+    /* 
+    根据搜索条件进行搜索
+    */
+    search () {
+      this.searchObj = {...this.tempSearchObj}
+      this.getRoles()
+    },
+
+    /* 
+    重置查询表单搜索列表
+    */
+    resetSearch() {
+      this.tempSearchObj = {
+        roleName: ''
+      }
+      this.searchObj = {
+        roleName: ''
+      }
+      this.getRoles()
+    },
+
+    /* 
+    删除指定的角色
+    */
+    removeRole ({id, roleName}) {
+      this.$confirm(`确定删除 '${roleName}' 吗?`, '提示', {
         type: 'warning'
-      }).then(() => { // promise
-        // 点击确定，远程调用ajax
-        // 遍历selection，将id取出放入id列表
-        var idList = []
-        this.multipleSelection.forEach(item => {
-          idList.push(item.id)
-        // console.log(idList)
+      }).then(async () => {
+        const result = await this.$API.role.removeById(id)
+        this.getRoles(this.roles.length===1 ? this.page-1 : this.page)
+        this.$message.success(result.message || '删除成功!')
+      }).catch(() => {
+        this.$message.info('已取消删除')
+      })
+    },
+
+    /* 
+    当表格复选框选项发生变化的时候触发
+    */
+    handleSelectionChange(selection) {
+      this.selectedRoles = selection
+    },
+
+    /* 
+    批量删除
+    */
+    removeRoles () {
+      this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
+        type: 'warning'
+      }).then(async () => {
+        const ids = this.selectedRoles.map(role => role.id)
+        const result = await this.$API.role.removeRoles(ids)
+        this.getRoles()
+        this.$message({
+          type: 'success',
+          message: '批量删除成功!'
         })
-        // 调用api
-        return this.$API.role.removeRows(idList)
       }).then((result) => {
-        this.fetchData(this.page)
-        if (result.success) {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-        }
+        
       }).catch(() => {
         this.$message({
           type: 'info',

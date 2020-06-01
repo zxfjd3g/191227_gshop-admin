@@ -3,7 +3,7 @@ const API_NAME = '/admin/acl/index'
 
 export default {
   /* 
-  登录
+  根据用户名和密码请求登陆
   */
   login(username, password) {
     return request({
@@ -17,17 +17,21 @@ export default {
   },
 
   /* 
-  根据token获取用户信息
+  获取当前用户信息
   */
   getInfo() {
-    return request({
-      url: `${API_NAME}/info`,
-      method: 'get',
-    })
+    return request(`${API_NAME}/info`)
   },
 
   /* 
-  登出
+  获取当前用户的菜单权限列表
+  */
+  getMenu() {
+    return request(`${API_NAME}/menu`)
+  },
+
+  /* 
+  退出登陆
   */
   logout() {
     return request({
@@ -35,14 +39,4 @@ export default {
       method: 'post'
     })
   },
-
-  /* 
-  获取当前用户的菜单权限列表
-  */
-  getMenu() {
-    return request({
-      url: `${API_NAME}/menu`,
-      method: 'get'
-    })
-  }
 }

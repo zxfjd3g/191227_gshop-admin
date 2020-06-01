@@ -1,16 +1,17 @@
 <template>
-  <div style="margin: 20px 20px">
-    <el-input disabled :value="$route.params.roleName"></el-input>
+  <div>
+    <el-input disabled :value="$route.query.roleName"></el-input>
     <el-tree 
+      style="margin: 20px 0"
       ref="tree"
-      :data="data" 
+      :data="allAuths" 
       node-key="id"  
       show-checkbox 
-      default-expand-all 
-      highlight-current
+      default-expand-all
       :props="defaultProps" 
     />
-    <el-button :disabled="saveBtnDisabled" type="primary" @click="save">保存</el-button>
+    <el-button :loading="loading" type="primary" @click="save">保存</el-button>
+    <el-button @click="$router.replace('/acl/role/list')">取消</el-button>
   </div>
 </template>
 <script>
@@ -19,87 +20,71 @@
     name: 'roleAuth',
     data() {
       return {
-        saveBtnDisabled: false,
-        data: [],
+        loading: false, // 用来标识是否正在保存请求中的标识, 防止重复提交
+        allAuths: [],
         defaultProps: {
           children: 'children',
           label: 'name'
         },
-        roleId: '',
-        // defaultKeys: []
       };
-    },
-    // 监听器
-    watch: {
-      $route(to, from) {
-        console.log('路由变化......')
-        console.log(to)
-        console.log(from)
-        this.init()
-      }
     },
 
     created() {
       this.init()
     },
-    methods: {
 
+    methods: {
+      /* 
+      初始化
+      */
       init() {
-        if (this.$route.params.id) {
-          this.roleId = this.$route.params.id
-          this.fetchDataById(this.roleId)
-        }
+        const roleId = this.$route.params.id
+        this.getAuths(roleId)
       },
-      fetchDataById(roleId) {
+
+      /* 
+      获取指定角色的权限列表
+      */
+      getAuths(roleId) {
         this.$API.menu.toAssign(roleId).then(result => {
-          this.data = result.data.children
-          var jsonList = JSON.parse(JSON.stringify(this.data))
-          var list = []
-          this.getJsonToList(list, jsonList[0]['children'])
-          this.setCheckedKeys(list)
+          const allAuths = result.data.children
+          this.allAuths = allAuths
+          const checkedIds = this.getCheckedIds(allAuths)
+          // console.log('getAuths() checkedIds', checkedIds)
+          this.$refs.tree.setCheckedKeys(checkedIds)
         })
       },
-      //把json数据转成string再转成对象，根据Key获取value数据
-      getJsonToList(list, jsonList) {
-        //遍历这个集合对象，获取key的值
-        for (var i = 0; i < jsonList.length; i++) {
-          if (jsonList[i]['select'] == true && jsonList[i]['level'] == 4) {
-            list.push(jsonList[i]['id'])
+
+      /* 
+      得到所有选中的id列表
+      */
+      getCheckedIds (auths, initArr = []) {
+        return auths.reduce((pre, item) => {
+          if (item.select && item.level===4) {
+            pre.push(item.id)
+          } else if (item.children) {
+            this.getCheckedIds(item.children, initArr)
           }
-          if (jsonList[i]['children'] != null) {
-            this.getJsonToList(list, jsonList[i]['children'])
-          }
-        }
+          return pre
+        }, initArr)
       },
 
-      getCheckedNodes() {
-        console.log(this.$refs.tree.getCheckedNodes());
-      },
-
-      setCheckedKeys(list) {
-        this.$refs.tree.setCheckedKeys(list);
-      },
-
+      /* 
+      保存权限列表
+      */
       save() {
-        this.saveBtnDisabled = true
-        console.log(this.$refs.tree.getCheckedKeys().length)
-        var ids = this.$refs.tree.getCheckedKeys().join(",");
+        var ids = this.$refs.tree.getCheckedKeys().join(",")
         /* 
         vue elementUI tree树形控件获取父节点ID的实例
         node_modules\element-ui\lib\element-ui.common.js    25377行修改源码 
         // if ((child.checked || includeHalfChecked && child.indeterminate) && (!leafOnly || leafOnly && child.isLeaf)) {
         if ((child.checked || child.indeterminate) && (!leafOnly || leafOnly && child.isLeaf)) {
         */
-        this.$API.menu.doAssign(this.roleId, ids).then(result => {
-          if (result.success) {
-            this.$message({
-              type: 'success',
-              message: '保存成功'
-            })
-            this.$router.push({
-              path: '/acl/role/list'
-            })
-          }
+        this.loading = true
+        this.$API.menu.doAssign(this.$route.params.id, ids).then(result => {
+          this.loading = false
+          this.$message.success(result.$message || '分配权限成功')
+          this.$router.replace('/acl/role/list')
         })
       }
     }

@@ -1,22 +1,17 @@
 <template>
   <div>
-    <!-- 表单组件: 指定搜索条件 -->
     <el-form :inline="true" class="demo-form-inline">
       <el-form-item>
-        <el-input type="text" width="100" placeholder="用户名称" v-model="searchObj.loginName" clearable/>
+        <el-input type="text" width="100" placeholder="用户名" v-model="tempSearchObj.loginName" clearable/>
       </el-form-item>
       <el-form-item>
-        <el-input type="text" width="100" placeholder="用户姓名" v-model="searchObj.name" clearable/>
-      </el-form-item>
-      <el-form-item>
-        <el-input type="text" width="100" placeholder="手机号" v-model="searchObj.phoneNum" clearable/>
+        <el-input type="text" width="100" placeholder="手机号" v-model="tempSearchObj.phoneNum" clearable/>
       </el-form-item>
 
-      <el-button type="primary" icon="el-icon-search" @click="getUsers()">查询</el-button>
-      <el-button type="default" @click="resetData()">清空</el-button>
+      <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
+      <el-button type="default" @click="resetSearch">清空</el-button>
     </el-form>
 
-    <!-- 表格组件: 显示列表 -->
     <el-table
       
       border
@@ -59,10 +54,10 @@
       :total="total"
       :page-size="limit"
       :page-sizes="[5, 10, 20, 30, 40, 50, 100]"
-      style="padding: 30px 0; text-align: center;"
-      layout="sizes, prev, pager, next, jumper, ->, total, slot"
+      style="padding: 20px 0;"
+      layout="prev, pager, next, jumper, ->, sizes, total"
       @current-change="getUsers"
-      @size-change="changeSize"
+      @size-change="handleSizeChange"
     />
   </div>
 </template>
@@ -74,20 +69,24 @@
     data () {
       return {
         users: [], // 当前页的用户列表
-        total: 0, // 数据库中的总记录数
+        total: 0, // 总记录数
         page: 1, // 默认页码
         limit: 10, // 每页记录数
         loading: false, // 是否正在请求中
-        searchObj: {}, // 查询表单对象
+        tempSearchObj: {}, // 用来收集搜索条件输入的对象
+        searchObj: {}, // 用来发搜索请求的条件数据
       }
     },
 
-    // 初始获取第1页的用户列表显示
     mounted () {
       this.getUsers()
     },
 
     methods: {
+
+      /* 
+      获取指定页码的分页列表显示
+      */
       getUsers (page=1) {
         this.loading = true
         this.$API.clientUser.getPageList(page, this.limit, this.searchObj)
@@ -99,14 +98,27 @@
           })
       },
 
-      // 当页码发生改变的时候
-      changeSize(size) {
-        console.log(size)
+      /* 
+      每页数量发生改变的监听回调
+      */
+      handleSizeChange(size) {
         this.limit = size
         this.getUsers()
       },
 
-      resetData () {
+      /* 
+      根据输入条件进行搜索
+      */
+      search () {
+        this.searchObj = {...this.tempSearchObj}
+        this.getUsers()
+      },
+
+      /* 
+      重置输入生搜索
+      */
+      resetSearch () {
+        this.tempSearchObj = {}
         this.searchObj = {}
         this.getUsers()
       }

@@ -1,13 +1,16 @@
 import request from '@/utils/request'
 
+/* 
+menu管理相关的API请求函数
+*/
 const api_name = '/admin/acl/permission'
 
 export default {
   
   /* 
-  获取权限菜单列表树
+  获取权限(菜单/功能)列表
   */
-  getNestedTreeList() {
+  getPermissionList() {
     return request({
       url: `${api_name}`,
       method: 'get'
@@ -15,9 +18,9 @@ export default {
   },
   
   /* 
-  删除一个菜单项
+  删除一个权限项
   */
-  removeById(id) {
+  removePermission(id) {
     return request({
       url: `${api_name}/remove/${id}`,
       method: "delete"
@@ -25,9 +28,9 @@ export default {
   },
   
   /* 
-  保存一级菜单项
+  保存一个权限项
   */
-  savePermission(permission) {
+  addPermission(permission) {
     return request({
       url: `${api_name}/save`,
       method: "post",
@@ -36,18 +39,18 @@ export default {
   },
 
   /* 
-  更新某个菜单项
+  更新一个权限项
   */
-  update(menu) {
+  updatePermission(permission) {
     return request({
       url: `${api_name}/update`,
       method: "put",
-      data: menu
+      data: permission
     })
   },
 
   /* 
-  查看某个角色的权限菜单
+  查看某个角色的权限列表
   */
   toAssign(roleId) {
     return request({
@@ -57,7 +60,7 @@ export default {
   },
 
   /* 
-  给角色授权
+  给某个角色授权
   */
   doAssign(roleId, permissionId) {
     return request({

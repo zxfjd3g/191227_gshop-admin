@@ -1,13 +1,12 @@
 <template>
   <div>
-    <!--查询表单-->
-    <el-form :inline="true" class="demo-form-inline">
+    <el-form inline>
       <el-form-item label="订单号">
-        <el-input type="text" width="100" placeholder="订单号" v-model="searchObj.outTradeNo" clearable/>
+        <el-input type="text" width="100" placeholder="订单号" v-model="tempSearchObj.outTradeNo" clearable/>
       </el-form-item>
 
       <el-form-item label="订单状态">
-        <el-select v-model="searchObj.orderStatus" clearable placeholder="订单状态">
+        <el-select v-model="tempSearchObj.orderStatus" clearable placeholder="订单状态">
           <el-option value="UNPAID" label="未支付"/>
           <el-option value="PAID" label="已支付"/>
           <el-option value="WAITING_DELEVER" label="待发货"/>
@@ -30,57 +29,47 @@
       </el-form-item>
 
        <el-form-item label="收货人">
-        <el-input type="text" width="100" placeholder="收货人" v-model="searchObj.consignee" clearable/>
+        <el-input type="text" width="100" placeholder="收货人" v-model="tempSearchObj.consignee" clearable/>
       </el-form-item>
 
       <el-form-item label="收件电话">
-        <el-input type="text" width="100" placeholder="收件人电话" v-model="searchObj.consigneeTel" clearable/>
+        <el-input type="text" width="100" placeholder="收件人电话" v-model="tempSearchObj.consigneeTel" clearable/>
       </el-form-item>
 
       <el-form-item label="送货地址">
-        <el-input type="text" width="150" placeholder="送货地址" v-model="searchObj.deliveryAddress" clearable/>
+        <el-input type="text" width="150" placeholder="送货地址" v-model="tempSearchObj.deliveryAddress" clearable/>
       </el-form-item>
 
-      <el-button type="primary" icon="el-icon-search" @click="getOrders()">查询</el-button>
-      <el-button type="default" @click="resetData()">清空</el-button>
+      <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
+      <el-button type="default" @click="resetSearch">清空</el-button>
     </el-form>
 
-
-    <!-- 订单列表 -->
     <el-table
       border
       stripe
-      fit
       highlight-current-row
-      :data="list"
+      :data="orderList"
       v-loading="loading"
       @selection-change="handleSelectionChange"
     >
 
       <el-table-column
+        type="index"
         label="序号"
         width="50"
         align="center">
-        <template slot-scope="scope">
-          {{ (page - 1) * limit + scope.$index + 1 }}
-        </template>
       </el-table-column>
 
-      <el-table-column prop="outTradeNo" label="订单号" width="180" />
-
+      <el-table-column prop="outTradeNo" label="订单号" width="220" />
       <el-table-column prop="totalAmount" label="支付金额(￥)" align="center" />
-
       <el-table-column prop="consignee" label="收货人" />
-
       <el-table-column prop="createTime" label="创建时间" />
-
       <el-table-column prop="expireTime" label="失效时间" />
-
       <el-table-column prop="orderStatusName" label="订单状态" width="80" />
 
 
       <el-table-column label="操作" width="150" align="center">
-        <template slot-scope="scope">
+        <template slot-scope="{row, $index}">
           <hint-button title="查看"  size="mini" type="primary" icon="el-icon-thumb" circle></hint-button>
           <hint-button title="修改" size="mini" type="primary" icon="el-icon-edit" circle></hint-button>
           <hint-button title="删除" size="mini" type="danger" icon="el-icon-delete" circle></hint-button>
@@ -94,10 +83,10 @@
       :total="total"
       :page-size="limit"
       :page-sizes="[5, 10, 20, 30, 40, 50, 100]"
-      style="padding: 30px 0; text-align: center;"
-      layout="sizes, prev, pager, next, jumper, ->, total, slot"
+      style="padding: 20px 0;"
+      layout="prev, pager, next, jumper, ->, sizes, total"
       @current-change="getOrders"
-      @size-change="changeSize"
+      @size-change="handleSizeChange"
     />
   </div>
 </template>
@@ -109,25 +98,26 @@ export default {
 
   data() {
     return {
-      loading: true, // 数据是否正在加载
-      list: null, // 订单列表
-      total: 0, // 数据库中的总记录数
+      loading: false, // 是否正在加载
+      orderList: [], // 订单列表
+      total: 0, // 总记录数
       page: 1, // 默认页码
       limit: 5, // 每页记录数
-      searchObj: {}, // 查询表单对象
-      multipleSelection: [], // 批量选择中选择的记录列表
-      times: []
+      searchObj: {}, // 查询条件对象
+      tempSearchObj: {}, // 收集输入
+      times: [], // 收集日期时间区间输入
     }
   },
 
-  // 生命周期函数：内存准备完毕，页面尚未渲染
-  mounted() {
+  created () {
     this.getOrders()
   },
 
   watch: {
+    /* 
+    一旦选择了新的时间区间, 保存新的数据
+    */
     times (value) {
-      console.log(value)
       if (value.length===2) {
         this.searchObj.createTimeBegin = value[0]
         this.searchObj.createTimeEnd = value[1]
@@ -135,31 +125,26 @@ export default {
     }
   },
 
-
   methods: {
-
     /* 
-    当页码发生改变的时候
+    每页数量发生改变时回调
     */
-    changeSize(size) {
-      console.log(size)
+    handleSizeChange(size) {
       this.limit = size
-      this.getOrders(1)
+      this.getOrders()
     },
 
     /* 
-    加载订单列表数据
+    异步请求指定页码的分页数据
     */
     getOrders(page = 1) {
       this.page = page
-
+      this.loading = true
       this.$API.order.getPageList(this.page, this.limit,this.searchObj).then(
         result => {
-          this.list = result.data.records
-          this.total = result.data.total
-
-          // 数据加载并绑定成功
           this.loading = false
+          this.orderList = result.data.records
+          this.total = result.data.total
         }
       )
     },
@@ -167,44 +152,12 @@ export default {
     /* 
     重置查询表单
     */
-    resetData() {
+    resetSearch() {
+      this.tempSearchObj = {}
       this.searchObj = {}
       this.getOrders()
     },
 
-    /* 
-    根据id删除数据 (没有接口)
-    */
-    deleteOrder(id) {
-      this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => { // promise
-        // 点击确定，远程调用ajax
-        return this.$API.order.removeById(id)
-      }).then((result) => {
-        this.getOrders(this.page)
-        if (result.success) {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-        }
-      }).catch((error) => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      })
-    },
-
-    // 当表格复选框选项发生变化的时候触发
-    handleSelectionChange(selection) {
-      console.log('handleSelectionChange......')
-      console.log(selection)
-      this.multipleSelection = selection
-    }
   }
 }
 </script>

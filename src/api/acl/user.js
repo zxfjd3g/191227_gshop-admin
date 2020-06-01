@@ -1,3 +1,6 @@
+/* 
+后台用户管理相关的API请求函数
+*/
 import request from '@/utils/request'
 
 const api_name = '/admin/acl/user'
@@ -11,12 +14,12 @@ export default {
     return request({
       url: `${api_name}/${page}/${limit}`,
       method: 'get',
-      params: searchObj // url查询字符串或表单键值对
+      params: searchObj
     })
   },
 
   /* 
-  获取某个后台用户
+  根据ID获取某个后台用户
   */
   getById(id) {
     return request({
@@ -28,7 +31,7 @@ export default {
   /* 
   保存一个新的后台用户
   */
-  save(user) {
+  add(user) {
     return request({
       url: `${api_name}/save`,
       method: 'post',
@@ -39,7 +42,7 @@ export default {
   /* 
   更新一个后台用户
   */
-  updateById(user) {
+  update(user) {
     return request({
       url: `${api_name}/update`,
       method: 'put',
@@ -50,7 +53,7 @@ export default {
   /* 
   获取某个用户的所有角色
   */
-  getAssign(userId) {
+  getRoles(userId) {
     return request({
       url: `${api_name}/toAssign/${userId}`,
       method: 'get'
@@ -58,9 +61,10 @@ export default {
   },
 
   /* 
-  保存某个用户的角色
+  给某个用户分配角色
+  roleId的结构: 字符串, 'rId1,rId2,rId3'
   */
-  saveAssign(userId, roleId) {
+  assignRoles(userId, roleId) {
     return request({
       url: `${api_name}/doAssign`,
       method: 'post',
@@ -83,6 +87,7 @@ export default {
 
   /* 
   批量删除多个用户
+  ids的结构: ids是包含n个id的数组
   */
   removeUsers(ids) {
     return request({

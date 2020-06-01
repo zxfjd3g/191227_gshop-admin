@@ -1,3 +1,6 @@
+/* 
+角色管理相关的API请求函数
+*/
 import request from '@/utils/request'
 
 const api_name = '/admin/acl/role'
