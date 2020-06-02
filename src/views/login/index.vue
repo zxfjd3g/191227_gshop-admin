@@ -1,6 +1,7 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
+    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" 
+      class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
         <h3 class="title">谷粒商城后台管理</h3>
@@ -41,14 +42,8 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登  陆</el-button>
-
-      <!-- 
-        <div class="tips">
-          <span style="margin-right:20px;">username: admin</span>
-          <span> password: 111111</span>
-        </div> 
-      -->
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" 
+        @click.native.prevent="handleLogin">登  陆</el-button>
 
     </el-form>
   </div>
@@ -62,14 +57,14 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       if (value.length<4) {
-        callback(new Error('Please enter the correct user name'))
+        callback(new Error('用户名长度不能小于4位'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error('密码长度不能小于6位'))
       } else {
         callback()
       }
@@ -99,9 +94,13 @@ export default {
   },
   
   methods: {
+
+    /* 
+    切换密码的显示/隐藏
+    */
     showPwd() {
       if (this.passwordType === 'password') {
-        this.passwordType = ''
+        this.passwordType = 'text'
       } else {
         this.passwordType = 'password'
       }
@@ -109,6 +108,10 @@ export default {
         this.$refs.password.focus()
       })
     },
+
+    /* 
+    点击登陆的回调
+    */
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
@@ -119,9 +122,6 @@ export default {
           }).catch(() => {
             this.loading = false
           })
-        } else {
-          console.log('error submit!!')
-          return false
         }
       })
     }
