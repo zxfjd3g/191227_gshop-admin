@@ -89,9 +89,9 @@ const actions = {
   /* 
   退出登陆
   */
-  logout({ commit, state }) {
+  logout({ commit }) {
     return new Promise((resolve, reject) => {
-      loginAPI.logout(state.token).then(() => {
+      loginAPI.logout().then(() => {
         removeToken() // must remove  token  first
         resetRouter()
         commit('RESET_STATE')

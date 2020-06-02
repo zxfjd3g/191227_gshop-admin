@@ -11,4 +11,4 @@ import {a, b, c, d} from './test1'
 // 导入所有模块
 import * as obj from './test1'
 
-console.log(xxx, xxx2, yyy, zzz, a, b, c, d, obj)
+// console.log(xxx, xxx2, yyy, zzz, a, b, c, d, obj)

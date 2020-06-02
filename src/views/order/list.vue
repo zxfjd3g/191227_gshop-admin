@@ -50,9 +50,7 @@
       highlight-current-row
       :data="orderList"
       v-loading="loading"
-      @selection-change="handleSelectionChange"
     >
-
       <el-table-column
         type="index"
         label="序号"
@@ -93,7 +91,6 @@
 
 <script>
 export default {
-
   name: 'OrderList',
 
   data() {
@@ -102,7 +99,7 @@ export default {
       orderList: [], // 订单列表
       total: 0, // 总记录数
       page: 1, // 默认页码
-      limit: 5, // 每页记录数
+      limit: 10, // 每页记录数
       searchObj: {}, // 查询条件对象
       tempSearchObj: {}, // 收集输入
       times: [], // 收集日期时间区间输入
@@ -114,7 +111,7 @@ export default {
   },
 
   watch: {
-    /* 
+    /*
     一旦选择了新的时间区间, 保存新的数据
     */
     times (value) {
@@ -126,7 +123,16 @@ export default {
   },
 
   methods: {
-    /* 
+
+    /*
+    根据输入搜索条件请求获取分页列表
+    */
+    search () {
+      this.searchObj = {...this.tempSearchObj}
+      this.getOrders()
+    },
+
+    /*
     每页数量发生改变时回调
     */
     handleSizeChange(size) {
@@ -134,7 +140,7 @@ export default {
       this.getOrders()
     },
 
-    /* 
+    /*
     异步请求指定页码的分页数据
     */
     getOrders(page = 1) {
@@ -149,7 +155,7 @@ export default {
       )
     },
 
-    /* 
+    /*
     重置查询表单
     */
     resetSearch() {
@@ -157,7 +163,6 @@ export default {
       this.searchObj = {}
       this.getOrders()
     },
-
   }
 }
 </script>

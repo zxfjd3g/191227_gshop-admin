@@ -118,7 +118,7 @@ const funRules = {
 }
 
 export default {
-  name: 'AuthMenus',
+  name: 'PermissionList',
 
   data() {
     this.svgNames = svgNames // 保存svg图片列表(非响应式)
@@ -179,7 +179,7 @@ export default {
     请求获取权限菜单数据列表
     */
     fetchPermissionList() {
-      this.$API.menu.getPermissionList().then(result => {
+      this.$API.permission.getPermissionList().then(result => {
         this.menuPermissionList = result.data.children
         this.expandKeys = [this.menuPermissionList[0].id]
       })
@@ -211,7 +211,7 @@ export default {
       this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
         type: 'warning'
       }).then(async () => {
-        const result = await this.$API.menu.removePermission(permission.id)
+        const result = await this.$API.permission.removePermission(permission.id)
         this.$message.success(result.message || '删除成功!')
         this.fetchPermissionList()
       }).catch((error) => { 
@@ -231,7 +231,7 @@ export default {
           const { permission } = this
           const { id } = permission
 
-          const result = await this.$API.menu[id ? 'updatePermission' : 'addPermission'](permission)
+          const result = await this.$API.permission[id ? 'updatePermission' : 'addPermission'](permission)
           this.$message.success(result.message || `${id ? '修改' : '添加'}成功!`)
           this.resetData()
           this.fetchPermissionList()
@@ -250,4 +250,5 @@ export default {
     }
   }
 }
+
 </script>

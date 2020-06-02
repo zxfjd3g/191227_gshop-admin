@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 /* 
-menu管理相关的API请求函数
+权限管理相关的API请求函数
 */
 const api_name = '/admin/acl/permission'
 

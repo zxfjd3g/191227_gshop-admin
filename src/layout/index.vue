@@ -1,17 +1,24 @@
 <template>
   <div :class="classObj" class="app-wrapper">
+    <!-- 在移动端模式下: 用来点击关闭左侧菜单导航的遮罩div -->
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
+    <!-- 左侧导航条 -->
     <sidebar class="sidebar-container" />
+    <!-- 右侧主体 -->
     <div class="main-container">
+      <!-- 上部导航条 -->
       <div :class="{'fixed-header':fixedHeader}">
         <navbar />
       </div>
+      <!-- 应用主体部分: 路由组件在其中显示 -->
       <app-main />
     </div>
+
   </div>
 </template>
 
 <script>
+import { mapState, mapGetters } from 'vuex'
 import { Navbar, Sidebar, AppMain } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 
@@ -24,6 +31,7 @@ export default {
   },
   mixins: [ResizeMixin],
   computed: {
+    
     sidebar() {
       return this.$store.state.app.sidebar
     },
@@ -33,6 +41,26 @@ export default {
     fixedHeader() {
       return this.$store.state.settings.fixedHeader
     },
+
+    /* 
+    ...mapState({
+      sidebar: state => state.app.sidebar,
+      device: state => state.app.device,
+      fixedHeader: state => state.settings.fixedHeader,
+    }), */
+
+    /* 
+    sidebar() {
+      return this.$store.getters.sidebar
+    },
+    device() {
+      return this.$store.getters.device
+    },
+    fixedHeader() {
+      return this.$store.getters.fixedHeader
+    }, */
+    // ...mapGetters(['sidebar', 'device', 'fixedHeader']),
+
     classObj() {
       return {
         hideSidebar: !this.sidebar.opened,

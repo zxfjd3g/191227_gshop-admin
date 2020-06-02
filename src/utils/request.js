@@ -1,3 +1,7 @@
+/**
+ * axios二次封装
+ */
+
 import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '@/store'
@@ -6,8 +10,7 @@ import { getToken } from '@/utils/auth'
 // 创建一个新的axios
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  // baseURL: 'http://47.93.148.192', // url = base url + request url
-  // baseURL: 'http://182.92.128.115', // url = base url + request url
+  
   timeout: 20000 //请求超时时间
 })
 
@@ -40,6 +43,7 @@ service.interceptors.response.use(
         Message.error(result.message || '未知错误')
         return new Promise(() => {})
       }
+      
       // 提示业务请求操作不成功
       Message({
         message: result.message || 'Error',

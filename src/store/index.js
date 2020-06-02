@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import createPersistedState from 'vuex-persistedstate'
 
 import getters from './getters'
 
@@ -18,19 +17,28 @@ const modules = context.keys().reduce((modules, modulePath) => {
   return modules
 }, {})
 
+// const modules2 = []
+// const context2 = require.context('./modules', false, /\.js$/)
+// const modulePaths = context2.keys()
+// modulePaths.forEach(path => {
+//   const moduleName = path.replace(/^\.\/(.*)\.\w+$/, '$1')
+//   const module = context(path).default
+//   modules2[moduleName] = module
+//   // console.log(path, moduleName, module)
+// })
+// console.log('modules', modules)
+
+const context2 = require.context('./modules', false, /\.js$/)
+const modules2 = context2.keys().reduce((pre, modulePath) => {
+  const moduleName = modulePath.replace(/^\.\/(.*)\.\w+$/, '$1')
+  const module = context2(modulePath).default
+  pre[moduleName] = module
+  return pre
+}, {})
+
 const store = new Vuex.Store({
-  modules,
+  modules: modules2,
   getters,
-  // 解决刷新vuex状态丢失问题
-  plugins: [createPersistedState({
-    storage: window.sessionStorage,
-    reducer(val) {
-      return {
-        // 只储存state中的assessmentData
-        dict: val.dict
-      }
-    }
-  })]
 })
 
 export default store

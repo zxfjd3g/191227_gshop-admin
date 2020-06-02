@@ -2,7 +2,9 @@
   <el-breadcrumb class="app-breadcrumb" separator="/">
     <transition-group name="breadcrumb">
       <el-breadcrumb-item v-for="(item,index) in levelList" :key="item.path">
-        <span v-if="item.redirect==='noredirect'||index==levelList.length-1" class="no-redirect">{{ item.meta.title }}</span>
+        <span v-if="item.redirect==='noredirect'||index==levelList.length-1" class="no-redirect">
+          {{ item.meta.title }}
+        </span>
         <a v-else @click.prevent="handleLink(item)">{{ item.meta.title }}</a>
       </el-breadcrumb-item>
     </transition-group>
@@ -28,7 +30,8 @@ export default {
   },
   methods: {
     getBreadcrumb() {
-      // only show routes with meta.title
+      // console.log('----', this.$route.matched)
+      // 过滤掉没有指定title的路由
       let matched = this.$route.matched.filter(item => item.meta && item.meta.title)
       const first = matched[0]
 
@@ -38,6 +41,10 @@ export default {
       this.levelList = matched.filter(item => item.meta && item.meta.title && item.meta.breadcrumb !== false)
       console.log('levelList', this.levelList)
     },
+
+    /* 
+    是否是首页路由
+    */
     isDashboard(route) {
       const name = route && route.name
       if (!name) {
@@ -45,6 +52,7 @@ export default {
       }
       return name.trim() === '首页'
     },
+
     pathCompile(path) {
       // To solve this problem https://github.com/PanJiaChen/vue-element-admin/issues/561
       const { params } = this.$route

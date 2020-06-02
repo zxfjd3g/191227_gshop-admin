@@ -12,6 +12,7 @@ export function isExternal(path) {
 }
 
 /**
+ * 判断是否是一个合法的用户名(没有使用了)
  * @param {string} str
  * @returns {Boolean}
  */

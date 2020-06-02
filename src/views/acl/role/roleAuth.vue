@@ -46,7 +46,7 @@
       获取指定角色的权限列表
       */
       getAuths(roleId) {
-        this.$API.menu.toAssign(roleId).then(result => {
+        this.$API.permission.toAssign(roleId).then(result => {
           const allAuths = result.data.children
           this.allAuths = allAuths
           const checkedIds = this.getCheckedIds(allAuths)
@@ -81,7 +81,7 @@
         if ((child.checked || child.indeterminate) && (!leafOnly || leafOnly && child.isLeaf)) {
         */
         this.loading = true
-        this.$API.menu.doAssign(this.$route.params.id, ids).then(result => {
+        this.$API.permission.doAssign(this.$route.params.id, ids).then(result => {
           this.loading = false
           this.$message.success(result.$message || '分配权限成功')
           this.$router.replace('/acl/role/list')

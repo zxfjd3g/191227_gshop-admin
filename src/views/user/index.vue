@@ -1,29 +1,25 @@
 <template>
   <div>
-    <el-form :inline="true" class="demo-form-inline">
+    <el-form inline>
       <el-form-item>
         <el-input type="text" width="100" placeholder="用户名" v-model="tempSearchObj.loginName" clearable/>
       </el-form-item>
       <el-form-item>
         <el-input type="text" width="100" placeholder="手机号" v-model="tempSearchObj.phoneNum" clearable/>
       </el-form-item>
-
       <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
       <el-button type="default" @click="resetSearch">清空</el-button>
     </el-form>
 
     <el-table
-      
       border
       stripe
-      fit
       highlight-current-row
       :data="users"
       v-loading="loading"
       element-loading-text="拼命加载中..."
     >
       <el-table-column align="center" label="用户ID" width="100" prop="id"/>
-
       <el-table-column label="用户名" width="150" prop="loginName" />
       <el-table-column label="手机号" prop="phoneNum" />
       <el-table-column label="头像">
@@ -35,15 +31,9 @@
       <el-table-column label="级别" prop="userLevel" />
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <a href="javascript:" title="查看">
-            <el-button size="mini" type="primary" icon="el-icon-thumb" circle></el-button>
-          </a>
-          <a href="javascript:" title="修改">
-            <el-button size="mini" type="primary" icon="el-icon-edit" circle></el-button>
-          </a>
-          <a href="javascript:" title="删除">
-            <el-button size="mini" type="danger" icon="el-icon-delete" circle></el-button>
-          </a>
+          <hint-button title="查看" size="mini" type="primary" icon="el-icon-thumb" circle></hint-button>
+          <hint-button title="修改" size="mini" type="primary" icon="el-icon-edit" circle></hint-button>
+          <hint-button title="删除" size="mini" type="danger" icon="el-icon-delete" circle></hint-button>
         </template>
       </el-table-column>
     </el-table>
@@ -72,7 +62,6 @@
         total: 0, // 总记录数
         page: 1, // 默认页码
         limit: 10, // 每页记录数
-        loading: false, // 是否正在请求中
         tempSearchObj: {}, // 用来收集搜索条件输入的对象
         searchObj: {}, // 用来发搜索请求的条件数据
       }
@@ -83,7 +72,6 @@
     },
 
     methods: {
-
       /* 
       获取指定页码的分页列表显示
       */

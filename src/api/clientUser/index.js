@@ -8,7 +8,7 @@ export default {
     
     return request({
       url: `/admin/user/${page}/${limit}`,
-      method: 'get',
+      method: 'GET',
       params: searchParams
     })
   }
