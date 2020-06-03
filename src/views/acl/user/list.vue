@@ -63,7 +63,7 @@
       @size-change="handleSizeChange"
     />
 
-    <el-dialog :title="user.id ? '修改用户' : '添加用户'" :visible.sync="isShowDialog">
+    <el-dialog :title="user.id ? '修改用户' : '添加用户'" :visible.sync="dialogUserVisible">
       <el-form ref="userForm" :model="user" :rules="userRules" label-width="120px">
         <el-form-item label="用户名" prop="username">
           <el-input v-model="user.username"/>
@@ -78,7 +78,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
-        <el-button :loading="loading" type="primary" @click="saveOrUpdate">确 定</el-button>
+        <el-button :loading="loading" type="primary" @click="addOrUpdate">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -113,21 +113,21 @@ export default {
 
   data () {
     return {
-      listLoading: false,
-      searchObj: {
+      listLoading: false, // 是否显示列表加载的提示
+      searchObj: { // 包含请求搜索条件数据的对象
         username: ''
       },
-      tempSearchObj: {
+      tempSearchObj: { // 收集搜索条件输入的对象
         username: ''
       },
-      selectedIds: [],
-      users: [],
-      page: 1,
-      limit: 5,
-      total: 0,
-      user: {},
-      isShowDialog: false,
-      userRules: {
+      selectedIds: [], // 所有选择的user的id的数组
+      users: [], // 当前页的用户列表
+      page: 1, // 当前页码
+      limit: 5, // 每页数量
+      total: 0, // 总数量
+      user: {}, // 当前要操作的user
+      dialogUserVisible: false, // 是否显示用户添加/修改的dialog
+      userRules: { // 用户添加/修改表单的校验规则
         username: [
           { required: true, message: '用户名必须输入' },
           { min: 4, message: '用户名不能小于4位' }
@@ -136,12 +136,12 @@ export default {
           { required: true, validator: this.validatePassword }
         ]
       },
-      loading: false,
+      loading: false, // 是否正在提交请求中
       dialogRoleVisible: false, // 是否显示角色Dialog
-      allRoles: [],
-      userRoleIds: [],
-      isIndeterminate: false,
-      checkAll: false,
+      allRoles: [], // 所有角色列表
+      userRoleIds: [], // 用户的角色ID的列表
+      isIndeterminate: false, // 是否是不确定的
+      checkAll: false, // 是否全选
     }
   },
 
@@ -249,10 +249,14 @@ export default {
     */
     showAddUser () {
       this.user = {}
-      this.isShowDialog = true
+      this.dialogUserVisible = true
+
       this.$nextTick(() => this.$refs.userForm.clearValidate())
     },
 
+    /* 
+    删除所有选中的用户
+    */
     revomveUsers () {
       this.$confirm('确定删除吗?').then(async () => {
         const result = await this.$API.user.removeUsers(this.selectedIds)
@@ -275,7 +279,7 @@ export default {
     */
     showUpdateUser (user) {
       this.user = cloneDeep(user)
-      this.isShowDialog = true
+      this.dialogUserVisible = true
     },
 
     /* 
@@ -310,12 +314,18 @@ export default {
       this.getUsers()
     },
 
+    /* 
+    取消用户的保存或更新
+    */
     cancel () {
-      this.isShowDialog = false
+      this.dialogUserVisible = false
       this.user = {}
     },
 
-    saveOrUpdate () {
+    /* 
+    保存或者更新用户
+    */
+    addOrUpdate () {
       this.$refs.userForm.validate(valid => {
         if (valid) {
           const {user} = this
@@ -325,7 +335,7 @@ export default {
             this.$message.success('保存成功!')
             this.getUsers(user.id ? this.page : 1)
             this.user = {}
-            this.isShowDialog = false
+            this.dialogUserVisible = false
           })
         }
       })

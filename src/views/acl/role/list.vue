@@ -97,10 +97,10 @@ export default {
       total: 0, // 总记录数
       page: 1, // 当前页码
       limit: 5, // 每页记录数
-      tempSearchObj: {
+      tempSearchObj: { // 收集搜索条件数据
         roleName: '',
       },
-      searchObj: {
+      searchObj: { // 发送请求的条件参数数据
         roleName: '',
       },
       selectedRoles: [] // 所有选中的角色列表

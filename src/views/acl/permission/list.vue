@@ -125,11 +125,10 @@ export default {
     return {
       menuPermissionList: [], // 菜单列表
       expandKeys: [], // 需要自动展开的项
-
       dialogPermissionVisible: false, // 是否显示菜单权限的Dialog
-      permission: {
+      permission: { // 要操作的菜单权限对象
         level: 0
-      }, // 要操作的菜单权限对象
+      }, 
     }
   },
 

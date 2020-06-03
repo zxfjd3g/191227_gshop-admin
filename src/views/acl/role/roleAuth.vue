@@ -4,7 +4,7 @@
     <el-tree 
       style="margin: 20px 0"
       ref="tree"
-      :data="allAuths" 
+      :data="allPermissions" 
       node-key="id"  
       show-checkbox 
       default-expand-all
@@ -18,10 +18,11 @@
 
   export default {
     name: 'roleAuth',
+
     data() {
       return {
         loading: false, // 用来标识是否正在保存请求中的标识, 防止重复提交
-        allAuths: [],
+        allPermissions: [], // 所有
         defaultProps: {
           children: 'children',
           label: 'name'
@@ -39,18 +40,18 @@
       */
       init() {
         const roleId = this.$route.params.id
-        this.getAuths(roleId)
+        this.getPermissions(roleId)
       },
 
       /* 
       获取指定角色的权限列表
       */
-      getAuths(roleId) {
+      getPermissions(roleId) {
         this.$API.permission.toAssign(roleId).then(result => {
-          const allAuths = result.data.children
-          this.allAuths = allAuths
-          const checkedIds = this.getCheckedIds(allAuths)
-          // console.log('getAuths() checkedIds', checkedIds)
+          const allPermissions = result.data.children
+          this.allPermissions = allPermissions
+          const checkedIds = this.getCheckedIds(allPermissions)
+          // console.log('getPermissions() checkedIds', checkedIds)
           this.$refs.tree.setCheckedKeys(checkedIds)
         })
       },
