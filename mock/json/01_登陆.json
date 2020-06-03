@@ -1,0 +1,8 @@
+{
+  "success": true,
+  "code": 20000,
+  "message": "成功",
+  "data": {
+    "token": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAAAKtWKi5NUrJSSkzJzcxT0lFKrShQsjI0tTQ0tDS0NDOoBQAmGnY8IAAAAA.o339JmTxH8yiZn238MkbAqy2f_nDlpJvmDbur0Vkew1YRGIwMrjJe70-fgRePqSZGphBR74Wmk9QDPYryfoOJA"
+  }
+}

@@ -61,8 +61,8 @@
       <el-table-column prop="outTradeNo" label="订单号" width="220" />
       <el-table-column prop="totalAmount" label="支付金额(￥)" align="center" />
       <el-table-column prop="consignee" label="收货人" />
-      <el-table-column prop="createTime" label="创建时间" />
-      <el-table-column prop="expireTime" label="失效时间" />
+      <el-table-column prop="createTime" label="创建时间" width="180"/>
+      <el-table-column prop="expireTime" label="失效时间" width="180"/>
       <el-table-column prop="orderStatusName" label="订单状态" width="80" />
 
 
@@ -75,7 +75,6 @@
       </el-table-column>
     </el-table>
 
-    <!-- 分页组件 -->
     <el-pagination
       :current-page="page"
       :total="total"

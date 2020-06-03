@@ -1,0 +1,42 @@
+{
+  "success": true,
+  "code": 20000,
+  "message": "成功",
+  "data": {
+    "permissionValueList": [
+      "user.add",
+      "user.update",
+      "user.remove",
+      "role.update",
+      "role.add",
+      "role.remove",
+      "role.acl",
+      "permission.add",
+      "permission.update",
+      "permission.remove",
+      "user.assgin",
+      "category.add",
+      "category.editor",
+      "order.delete",
+      "attr.add",
+      "attr.delete",
+      "attr.edit",
+      "trademark.add",
+      "trademark.edit",
+      "spu.add",
+      "sku.add",
+      "sku.updown",
+      "user.detail",
+      "user.edit",
+      "user.delete",
+      "sku.edit",
+      "order.detail",
+      "order.edit"
+    ],
+    "roles": [
+      "普通管理员"
+    ],
+    "name": "admin",
+    "avatar": "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif"
+  }
+}

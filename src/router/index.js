@@ -3,7 +3,7 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-/* Layout: 整体界面布局的根路由组件 */
+// Layout: 整体界面布局的根路由组件
 import Layout from '@/layout'
 
 /**
@@ -26,6 +26,17 @@ import Layout from '@/layout'
  */
 
 /**
+  * hidden: true/false    如果为true, 在左侧导航中隐藏, 默认是false
+  * redirect: noredirect  如果指定为此值, 在头部的导航列表项中就不是链接
+  * name: 'xxx'           路由的标识名称, 用于<keep-alive>, 必须指定
+  * component             路由组件(可能是懒加载函数)
+  * meta: {
+      title: '标题'        用于显示在左侧和头部导航的标题
+      icon: 'svg-name'     显示在左侧导航中的图标名称
+  }
+*/
+
+/**
  * 常量路由的数组
  * 也就是任何角色用户都可以访问的所有路由的数组
  */
@@ -34,13 +45,13 @@ export const constantRoutes = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
-    hidden: true
+    // hidden: true
   },
   // 404
   {
     path: '/404',
     component: () => import('@/views/404'),
-    hidden: true
+    // hidden: true
   },
   // 首页根路由
   {
@@ -63,16 +74,19 @@ export const constantRoutes = [
 必须最后才注册的路由
 用于处理当请求路径没有一个匹配时, 自动跳转到404路由界面
 */
-export const lastRoute = { path: '*', redirect: '/404', hidden: true }
+export const lastRoute = { 
+  path: '*', 
+  redirect: '/404', 
+  hidden: true 
+}
 
 /* 
 用于创建只注册常量路由的路由器的函数
 */
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
-  mode: 'hash',
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
+  mode: 'hash', // 带#模式
+  scrollBehavior: () => ({ y: 0 }), // 切换路由自动滑动到顶部
+  routes: constantRoutes // 默认只有常量路由, 其它权限路由后面动态添加
 })
 
 // 生成只包含常量路由的路由器
@@ -81,8 +95,11 @@ const router = createRouter()
 // 向外暴露重置路由器的matcher的函数
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
+  // 重新生成只包含常量路由的路由器
   const newRouter = createRouter()
-  router.matcher = newRouter.matcher // reset router
+
+  // 重置路由器的matcher(只包含常量路由)
+  router.matcher = newRouter.matcher 
 }
 
 // 向外暴露路由器

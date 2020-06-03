@@ -1,0 +1,443 @@
+{
+  "code": 200,
+  "message": "成功",
+  "data": {
+    "records": [
+      {
+        "id": 563,
+        "consignee": "admin",
+        "consigneeTel": "15011111111",
+        "totalAmount": 0.01,
+        "orderStatus": "PAID",
+        "userId": 2,
+        "paymentWay": "ONLINE",
+        "deliveryAddress": "北京市昌平区2",
+        "orderComment": "请尽快发货",
+        "outTradeNo": "ATGUIGU1589717971246690",
+        "tradeBody": "小米10 双模5G 骁龙865 77 小米10 双模5G 骁龙865  88 ",
+        "createTime": "2020-05-17 20:19:31",
+        "expireTime": "2020-05-18 20:19:31",
+        "processStatus": "PAID",
+        "trackingNo": null,
+        "parentOrderId": null,
+        "imgUrl": null,
+        "orderDetailList": [
+          {
+            "id": 1203,
+            "orderId": 563,
+            "skuId": 22,
+            "skuName": "小米10 双模5G 骁龙865  88",
+            "imgUrl": "http://182.92.128.115:8080/group1/M00/00/00/rBFUDF6V2P6AVD_OAAEovKhxTTs361.jpg",
+            "orderPrice": 3232,
+            "skuNum": 3,
+            "hasStock": null
+          },
+          {
+            "id": 1202,
+            "orderId": 563,
+            "skuId": 21,
+            "skuName": "小米10 双模5G 骁龙865 77",
+            "imgUrl": "http://182.92.128.115:8080/group1/M00/00/00/rBFUDF6V2PmAAiv4AAE2h_xkskg874.jpg",
+            "orderPrice": 4343,
+            "skuNum": 3,
+            "hasStock": null
+          }
+        ],
+        "orderStatusName": "已支付",
+        "wareId": null
+      },
+      {
+        "id": 556,
+        "consignee": "admin",
+        "consigneeTel": "15011111111",
+        "totalAmount": 0.01,
+        "orderStatus": "PAID",
+        "userId": 2,
+        "paymentWay": "ONLINE",
+        "deliveryAddress": "北京市昌平区2",
+        "orderComment": "请尽快发货",
+        "outTradeNo": "ATGUIGU1589712811202656",
+        "tradeBody": " Apple iPhone pro x (A2223) 128GB 红色 移动联通电信666 ",
+        "createTime": "2020-05-17 18:53:31",
+        "expireTime": "2020-05-18 18:53:31",
+        "processStatus": "PAID",
+        "trackingNo": null,
+        "parentOrderId": null,
+        "imgUrl": null,
+        "orderDetailList": [
+          {
+            "id": 1193,
+            "orderId": 556,
+            "skuId": 31,
+            "skuName": " Apple iPhone pro x (A2223) 128GB 红色 移动联通电信666",
+            "imgUrl": "http://182.92.128.115:8080/group1/M00/00/00/rBFUDF6XAguALCKuAALLg55w-7E276.png",
+            "orderPrice": 1999,
+            "skuNum": 2,
+            "hasStock": null
+          }
+        ],
+        "orderStatusName": "已支付",
+        "wareId": null
+      },
+      {
+        "id": 550,
+        "consignee": "admin",
+        "consigneeTel": "15011111111",
+        "totalAmount": 0.01,
+        "orderStatus": "PAID",
+        "userId": 2,
+        "paymentWay": "ONLINE",
+        "deliveryAddress": "北京市昌平区2",
+        "orderComment": "请尽快发货",
+        "outTradeNo": "ATGUIGU1589712397101463",
+        "tradeBody": " Apple iPhone pro x (A2223) 128GB 红色 移动联通电信666  Ap",
+        "createTime": "2020-05-17 18:46:37",
+        "expireTime": "2020-05-18 18:46:37",
+        "processStatus": "PAID",
+        "trackingNo": null,
+        "parentOrderId": null,
+        "imgUrl": null,
+        "orderDetailList": [
+          {
+            "id": 1185,
+            "orderId": 550,
+            "skuId": 10,
+            "skuName": " Apple iPhone 11 (A2223) 128GB 红色 移动联通电信66",
+            "imgUrl": "http://182.92.128.115:8080/group1/M00/00/00/rBFUDF6V0LiAOxIrAAGjkWWV1RE886.png",
+            "orderPrice": 3232,
+            "skuNum": 3,
+            "hasStock": null
+          },
+          {
+            "id": 1184,
+            "orderId": 550,
+            "skuId": 31,
+            "skuName": " Apple iPhone pro x (A2223) 128GB 红色 移动联通电信666",
+            "imgUrl": "http://182.92.128.115:8080/group1/M00/00/00/rBFUDF6XAguALCKuAALLg55w-7E276.png",
+            "orderPrice": 1999,
+            "skuNum": 2,
+            "hasStock": null
+          }
+        ],
+        "orderStatusName": "已支付",
+        "wareId": null
+      },
+      {
+        "id": 548,
+        "consignee": "admin",
+        "consigneeTel": "15011111111",
+        "totalAmount": 0.01,
+        "orderStatus": "PAID",
+        "userId": 2,
+        "paymentWay": "ONLINE",
+        "deliveryAddress": "北京市昌平区2",
+        "orderComment": "请尽快发货!!!",
+        "outTradeNo": "ATGUIGU1589712304781415",
+        "tradeBody": " Apple iPhone pro x (A2223) 128GB 红色 移动联通电信666  Ap",
+        "createTime": "2020-05-17 18:45:05",
+        "expireTime": "2020-05-18 18:45:05",
+        "processStatus": "PAID",
+        "trackingNo": null,
+        "parentOrderId": null,
+        "imgUrl": null,
+        "orderDetailList": [
+          {
+            "id": 1181,
+            "orderId": 548,
+            "skuId": 10,
+            "skuName": " Apple iPhone 11 (A2223) 128GB 红色 移动联通电信66",
+            "imgUrl": "http://182.92.128.115:8080/group1/M00/00/00/rBFUDF6V0LiAOxIrAAGjkWWV1RE886.png",
+            "orderPrice": 3232,
+            "skuNum": 3,
+            "hasStock": null
+          },
+          {
+            "id": 1180,
+            "orderId": 548,
+            "skuId": 31,
+            "skuName": " Apple iPhone pro x (A2223) 128GB 红色 移动联通电信666",
+            "imgUrl": "http://182.92.128.115:8080/group1/M00/00/00/rBFUDF6XAguALCKuAALLg55w-7E276.png",
+            "orderPrice": 1999,
+            "skuNum": 2,
+            "hasStock": null
+          }
+        ],
+        "orderStatusName": "已支付",
+        "wareId": null
+      },
+      {
+        "id": 396,
+        "consignee": "admin",
+        "consigneeTel": "15011111111",
+        "totalAmount": 0.01,
+        "orderStatus": "PAID",
+        "userId": 2,
+        "paymentWay": "ONLINE",
+        "deliveryAddress": "北京市昌平区2",
+        "orderComment": "",
+        "outTradeNo": "ATGUIGU1589582467771234",
+        "tradeBody": "小米10 双模5G 骁龙86 665  小米10 双模5G 骁龙865 455 ",
+        "createTime": "2020-05-16 06:41:08",
+        "expireTime": "2020-05-17 06:41:08",
+        "processStatus": "PAID",
+        "trackingNo": null,
+        "parentOrderId": null,
+        "imgUrl": null,
+        "orderDetailList": [
+          {
+            "id": 912,
+            "orderId": 396,
+            "skuId": 19,
+            "skuName": "小米10 双模5G 骁龙865 455",
+            "imgUrl": "http://182.92.128.115:8080/group1/M00/00/00/rBFUDF6V2POATtQoAAGOcvMrr5o024.jpg",
+            "orderPrice": 2424,
+            "skuNum": 2,
+            "hasStock": null
+          },
+          {
+            "id": 911,
+            "orderId": 396,
+            "skuId": 26,
+            "skuName": "小米10 双模5G 骁龙86 665 ",
+            "imgUrl": "http://182.92.128.115:8080/group1/M00/00/00/rBFUDF6V2OeAKqv6AAFdgoifvoA252.jpg",
+            "orderPrice": 2222,
+            "skuNum": 1,
+            "hasStock": null
+          }
+        ],
+        "orderStatusName": "已支付",
+        "wareId": null
+      },
+      {
+        "id": 378,
+        "consignee": "admin",
+        "consigneeTel": "15011111111",
+        "totalAmount": 0.01,
+        "orderStatus": "PAID",
+        "userId": 2,
+        "paymentWay": "ONLINE",
+        "deliveryAddress": "北京市昌平区2",
+        "orderComment": "请尽快发货",
+        "outTradeNo": "ATGUIGU1588236231227622",
+        "tradeBody": "小米10 双模5G 骁龙865 22 ",
+        "createTime": "2020-04-30 16:43:51",
+        "expireTime": "2020-05-01 16:43:51",
+        "processStatus": "PAID",
+        "trackingNo": null,
+        "parentOrderId": null,
+        "imgUrl": null,
+        "orderDetailList": [
+          {
+            "id": 876,
+            "orderId": 378,
+            "skuId": 16,
+            "skuName": "小米10 双模5G 骁龙865 22",
+            "imgUrl": "http://182.92.128.115:8080/group1/M00/00/00/rBFUDF6V2OOALZNUAAFjmI5Px7U119.jpg",
+            "orderPrice": 2323,
+            "skuNum": 1,
+            "hasStock": null
+          }
+        ],
+        "orderStatusName": "已支付",
+        "wareId": null
+      },
+      {
+        "id": 357,
+        "consignee": "admin",
+        "consigneeTel": "15011111111",
+        "totalAmount": 0.01,
+        "orderStatus": "PAID",
+        "userId": 2,
+        "paymentWay": "ONLINE",
+        "deliveryAddress": "北京市昌平区2",
+        "orderComment": "请尽快发货",
+        "outTradeNo": "ATGUIGU1587347833773612",
+        "tradeBody": " Apple iPhone 11 (A2223) 128GB 红色 移动联通电信44 ",
+        "createTime": "2020-04-20 09:57:14",
+        "expireTime": "2020-04-21 09:57:14",
+        "processStatus": "PAID",
+        "trackingNo": null,
+        "parentOrderId": null,
+        "imgUrl": null,
+        "orderDetailList": [
+          {
+            "id": 845,
+            "orderId": 357,
+            "skuId": 8,
+            "skuName": " Apple iPhone 11 (A2223) 128GB 红色 移动联通电信44",
+            "imgUrl": "http://182.92.128.115:8080/group1/M00/00/00/rBFUDF6V0KKAQb31AAJMcb-7-8U033.png",
+            "orderPrice": 3434,
+            "skuNum": 2,
+            "hasStock": null
+          }
+        ],
+        "orderStatusName": "已支付",
+        "wareId": null
+      },
+      {
+        "id": 287,
+        "consignee": null,
+        "consigneeTel": null,
+        "totalAmount": 0.01,
+        "orderStatus": "PAID",
+        "userId": 79,
+        "paymentWay": "ONLINE",
+        "deliveryAddress": null,
+        "orderComment": "请尽快发货",
+        "outTradeNo": "ATGUIGU1587191833123759",
+        "tradeBody": " Apple iPhone 11 (A2223) 128GB 红色 移动联通电信22  小米10 双",
+        "createTime": "2020-04-18 14:37:13",
+        "expireTime": "2020-04-19 14:37:13",
+        "processStatus": "PAID",
+        "trackingNo": null,
+        "parentOrderId": null,
+        "imgUrl": null,
+        "orderDetailList": [
+          {
+            "id": 666,
+            "orderId": 287,
+            "skuId": 22,
+            "skuName": "小米10 双模5G 骁龙865  88",
+            "imgUrl": "http://182.92.128.115:8080/group1/M00/00/00/rBFUDF6V2P6AVD_OAAEovKhxTTs361.jpg",
+            "orderPrice": 3232,
+            "skuNum": 4,
+            "hasStock": null
+          },
+          {
+            "id": 665,
+            "orderId": 287,
+            "skuId": 2,
+            "skuName": "Apple iPhone XR (A2108)22",
+            "imgUrl": "http://182.92.128.115:8080/group1/M00/00/00/rBFUDF6VyfyAfxezAARBbOFfW0U698.png",
+            "orderPrice": 4545,
+            "skuNum": 1,
+            "hasStock": null
+          },
+          {
+            "id": 664,
+            "orderId": 287,
+            "skuId": 25,
+            "skuName": " 小米10 双模5G 骁龙865 43",
+            "imgUrl": "http://182.92.128.115:8080/group1/M00/00/00/rBFUDF6V2OuAOrlbAAFXpBX_XLU585.jpg",
+            "orderPrice": 4242,
+            "skuNum": 1,
+            "hasStock": null
+          },
+          {
+            "id": 663,
+            "orderId": 287,
+            "skuId": 6,
+            "skuName": " Apple iPhone 11 (A2223) 128GB 红色 移动联通电信22",
+            "imgUrl": "http://182.92.128.115:8080/group1/M00/00/00/rBFUDF6V0JmAG9XGAAGL4LZv5fQ163.png",
+            "orderPrice": 4343,
+            "skuNum": 3,
+            "hasStock": null
+          }
+        ],
+        "orderStatusName": "已支付",
+        "wareId": null
+      },
+      {
+        "id": 284,
+        "consignee": null,
+        "consigneeTel": null,
+        "totalAmount": 0.01,
+        "orderStatus": "PAID",
+        "userId": 79,
+        "paymentWay": "ONLINE",
+        "deliveryAddress": null,
+        "orderComment": "请尽快发货",
+        "outTradeNo": "ATGUIGU1587191590563712",
+        "tradeBody": " Apple iPhone 11 (A2223) 128GB 红色 移动联通电信22  小米10 双",
+        "createTime": "2020-04-18 14:33:11",
+        "expireTime": "2020-04-19 14:33:11",
+        "processStatus": "PAID",
+        "trackingNo": null,
+        "parentOrderId": null,
+        "imgUrl": null,
+        "orderDetailList": [
+          {
+            "id": 654,
+            "orderId": 284,
+            "skuId": 22,
+            "skuName": "小米10 双模5G 骁龙865  88",
+            "imgUrl": "http://182.92.128.115:8080/group1/M00/00/00/rBFUDF6V2P6AVD_OAAEovKhxTTs361.jpg",
+            "orderPrice": 3232,
+            "skuNum": 4,
+            "hasStock": null
+          },
+          {
+            "id": 653,
+            "orderId": 284,
+            "skuId": 2,
+            "skuName": "Apple iPhone XR (A2108)22",
+            "imgUrl": "http://182.92.128.115:8080/group1/M00/00/00/rBFUDF6VyfyAfxezAARBbOFfW0U698.png",
+            "orderPrice": 4545,
+            "skuNum": 1,
+            "hasStock": null
+          },
+          {
+            "id": 652,
+            "orderId": 284,
+            "skuId": 25,
+            "skuName": " 小米10 双模5G 骁龙865 43",
+            "imgUrl": "http://182.92.128.115:8080/group1/M00/00/00/rBFUDF6V2OuAOrlbAAFXpBX_XLU585.jpg",
+            "orderPrice": 4242,
+            "skuNum": 1,
+            "hasStock": null
+          },
+          {
+            "id": 651,
+            "orderId": 284,
+            "skuId": 6,
+            "skuName": " Apple iPhone 11 (A2223) 128GB 红色 移动联通电信22",
+            "imgUrl": "http://182.92.128.115:8080/group1/M00/00/00/rBFUDF6V0JmAG9XGAAGL4LZv5fQ163.png",
+            "orderPrice": 4343,
+            "skuNum": 1,
+            "hasStock": null
+          }
+        ],
+        "orderStatusName": "已支付",
+        "wareId": null
+      },
+      {
+        "id": 151,
+        "consignee": "admin",
+        "consigneeTel": "15011111111",
+        "totalAmount": 0.01,
+        "orderStatus": "PAID",
+        "userId": 2,
+        "paymentWay": "ONLINE",
+        "deliveryAddress": "北京市昌平区2",
+        "orderComment": "请尽快发货",
+        "outTradeNo": "ATGUIGU158710759155128",
+        "tradeBody": "Apple iPhone XR (A2108)22 ",
+        "createTime": "2020-04-17 15:13:12",
+        "expireTime": "2020-04-18 15:13:12",
+        "processStatus": "PAID",
+        "trackingNo": null,
+        "parentOrderId": null,
+        "imgUrl": null,
+        "orderDetailList": [
+          {
+            "id": 289,
+            "orderId": 151,
+            "skuId": 2,
+            "skuName": "Apple iPhone XR (A2108)22",
+            "imgUrl": "http://182.92.128.115:8080/group1/M00/00/00/rBFUDF6VyfyAfxezAARBbOFfW0U698.png",
+            "orderPrice": 4545,
+            "skuNum": 1,
+            "hasStock": null
+          }
+        ],
+        "orderStatusName": "已支付",
+        "wareId": null
+      }
+    ],
+    "total": 12,
+    "size": 10,
+    "current": 1,
+    "pages": 2
+  },
+  "ok": true
+}

@@ -13,6 +13,7 @@ const whiteList = ['/login']
 
 // 注册全局前置守卫: 在路由准备跳转前执行
 router.beforeEach(async(to, from, next) => {
+  // debugger
   // 在显示进度条
   NProgress.start()
 

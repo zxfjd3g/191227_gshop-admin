@@ -4,8 +4,8 @@ import SvgIcon from '@/components/SvgIcon'// svg component
 // 注册svg全局组件
 Vue.component('svg-icon', SvgIcon)
 
-
-const svgNames = [] // 用来保存所有svg文件名的数组
+// 用来保存所有svg文件名的数组: 用于权限管理中选择一级导航菜单
+const svgNames = [] 
 
 // 加载svg文件夹下所有的svg文件模块
 const context = require.context('./svg', false, /\.svg$/)

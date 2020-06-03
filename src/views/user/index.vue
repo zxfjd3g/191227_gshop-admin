@@ -58,6 +58,7 @@
 
     data () {
       return {
+        loading: false, // 是否正在加载中
         users: [], // 当前页的用户列表
         total: 0, // 总记录数
         page: 1, // 默认页码
