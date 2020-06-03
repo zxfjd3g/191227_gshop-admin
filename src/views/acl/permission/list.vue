@@ -193,6 +193,7 @@ export default {
       this.permission.pid = row.id
       this.permission.level = row.level + 1
 
+      // 清除校验(必须在界面更新之后)
       this.$nextTick(() => this.$refs.permission.clearValidate())
     },
 
@@ -202,6 +203,9 @@ export default {
     toUpdatePermission(row) {
       this.dialogPermissionVisible = true
       this.permission = {...row}  // 使用浅拷贝
+
+      // 清除校验(必须在界面更新之后)
+      this.$nextTick(() => this.$refs.permission.clearValidate())
     },
 
     /* 

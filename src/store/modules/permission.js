@@ -2,12 +2,12 @@ import { constantRoutes, lastRoute } from '@/router'
 import { login as loginAPI} from '@/api'
 import Layout from '@/layout'
 
-/* 
+/*
 根据路由权限列表生成路由列表
 主要工作就是将组件路径转换为对应的异步路由组件
 */
 function generateAsyncRoutes(permissionList) {
-  
+
   const accessedRoutes = permissionList.filter(route => {
     // 得到路由组件名称字符串
     let component = route.component
@@ -33,7 +33,7 @@ function generateAsyncRoutes(permissionList) {
 }
 
 const state = {
-  routes: [], // 常量路由 + 权限路由数组
+  routes: [], // 常量路由 + 权限路由 + last路由数组
   asyncRoutes: [] // 当前用户的权限路由数组
 }
 
@@ -48,7 +48,7 @@ const mutations = {
 }
 
 const actions = {
-  /* 
+  /*
   异步生成当前用户的所有路由
   */
   async generateRoutes({ commit }) {

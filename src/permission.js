@@ -9,7 +9,7 @@ import getPageTitle from '@/utils/get-page-title' // 获取应用头部标题的
 NProgress.configure({ showSpinner: false }) // 配置NProgress: 不显示右侧旋转进度条
 
 // 不用进行登陆token检查的白名单路径数组
-const whiteList = ['/login'] 
+const whiteList = ['/login']
 
 // 注册全局前置守卫: 在路由准备跳转前执行
 router.beforeEach(async(to, from, next) => {
@@ -32,11 +32,10 @@ router.beforeEach(async(to, from, next) => {
     } else { // 请求的不是登陆路由
       // 是否已经登陆
       const hasLogin = !!store.getters.name
-      
       // 如果已经登陆直接放行
       if (hasLogin) {
         next()
-      } else {// 如果还没有登陆
+      } else { // 如果还没有登陆
         try {
           // 异步请求获取用户信息
           await store.dispatch('user/getInfo')
@@ -48,7 +47,7 @@ router.beforeEach(async(to, from, next) => {
           // console.log('asyncRoutes', asyncRoutes.concat(lastRoute))
           // 跳转到目标路由去, 只是强制用替换模式
           next({ ...to, replace: true })
-        } catch (error) { // 如果请求处理过程中出错 
+        } catch (error) { // 如果请求处理过程中出错
           // 重置token
           await store.dispatch('user/resetToken')
           // 提示错误信息
@@ -65,7 +64,7 @@ router.beforeEach(async(to, from, next) => {
     if (whiteList.indexOf(to.path) !== -1) {
       // 放行
       next()
-    } else { 
+    } else {
       // 如果没在白名单中, 跳转到登陆路由携带原目标路径
       next(`/login?redirect=${to.path}`)
       // 完成进度条

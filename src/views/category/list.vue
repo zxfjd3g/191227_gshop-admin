@@ -30,11 +30,11 @@
         </template>
 
         <template slot-scope="scope">
-          <HintButton title="添加子分类" :disabled="!scope.row.level" 
+          <HintButton v-if="$hasBP('category.add')" title="添加子分类" :disabled="!scope.row.level" 
             size="mini" type="primary" icon="el-icon-plus"/>
-          <HintButton title="修改分类" 
+          <HintButton v-if="$hasBP('category.edit')" title="修改分类" 
             size="mini" type="primary" icon="el-icon-edit"/>
-          <HintButton title="删除分类" 
+          <HintButton v-if="$hasBP('category.remove')" title="删除分类" 
             size="mini" type="danger" icon="el-icon-delete"/>
         </template>
       </el-table-column>

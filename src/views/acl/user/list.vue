@@ -297,8 +297,8 @@ export default {
       const result = await this.$API.user.getPageList(page, limit, searchObj)
       this.listLoading = false
       const {items, total} = result.data
-      this.users = items.filter(user => user.username!=='admin')
-      this.total = total-1
+      this.users = items
+      this.total = total
       this.selectedIds = []
     },
 

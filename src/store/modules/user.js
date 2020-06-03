@@ -4,12 +4,12 @@ import { resetRouter } from '@/router'
 
 const getDefaultState = () => {
   return {
-    token: getToken(),
-    name: '',
-    avatar: '',
+    token: getToken(), // 登陆用户的token, 初始值从cookie中读取
+    name: '', // 用户名
+    avatar: '', // 用户头像图片地址
 
-    buttons: [], // 所有按钮权限的数组
-    roles: [] // 所拥有角色的数组
+    buttons: [], // 当前用户的按钮权限的数组
+    roles: [] // 当前用户所拥有角色的数组
   }
 }
 

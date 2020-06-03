@@ -1,7 +1,6 @@
 <template>
   <section class="app-main">
     <transition name="fade-transform" mode="out-in">
-      <!-- key值发生变化时, 触发过渡 -->
       <router-view :key="key" />
     </transition>
   </section>
